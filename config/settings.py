@@ -24,6 +24,7 @@ INSTALLED_APPS = [
 
     # my apps
     'accounts',
+    'msg',
 ]
 
 MIDDLEWARE = [
