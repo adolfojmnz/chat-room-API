@@ -2,7 +2,7 @@
 
 ## Description
 
-A chat room API that features private and public chats with multiple participants 
+A chat room API that features private and public chats with multiple participants
 <br>
 <br>
 
