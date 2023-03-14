@@ -1,7 +1,7 @@
 from django.db import models
 
 
-class Messages(models.Model):
+class Message(models.Model):
     sender = models.ForeignKey('accounts.CustomUser', on_delete=models.CASCADE)
     body = models.CharField(max_length=1000)
 
