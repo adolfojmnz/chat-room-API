@@ -6,7 +6,7 @@ from msg.models import Message, Files
 
 class Chatroom(models.Model):
     name = models.CharField(max_length=255, unique=True)
-    description = models.CharField(max_length=1000, blank=True, default=True)
+    description = models.CharField(max_length=1000, blank=True, null=True, default='')
     creation_date = models.DateField(auto_now=True)
     public = models.BooleanField(default=True)
     min_age_required = models.IntegerField(default=13)
@@ -25,7 +25,10 @@ class Chat(models.Model):
     files = models.ManyToManyField(Files)
 
     def __str__(self) -> str:
-        return self.messages.all()[-1][:100]
+        participants = [
+            user.__str__() for user in self.participants.all()
+        ]
+        return f'{participants} chat'
 
 
 class Topic(models.Model):
