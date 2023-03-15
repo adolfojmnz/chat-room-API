@@ -1,9 +1,6 @@
 from django.test import TestCase
 
-from msg.models import Message, Files
-from accounts.models import CustomUser as User
 from chatrooms.models import Chatroom, Chat, Topic
-
 from accounts.tests import CreateTestUserMixin
 from msg.tests import CreateTestMessageMixin
 
