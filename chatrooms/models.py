@@ -1,7 +1,6 @@
 from django.db import models
 
 from accounts.models import CustomUser as User
-from msg.models import Message, Files
 
 
 class Chatroom(models.Model):
@@ -12,8 +11,6 @@ class Chatroom(models.Model):
     min_age_required = models.IntegerField(default=13)
     topics = models.ManyToManyField('chatrooms.Topic')
     participants = models.ManyToManyField(User)
-    messages = models.ManyToManyField(Message)
-    files = models.ManyToManyField(Files)
 
     def __str__(self) -> str:
         return self.name
@@ -21,8 +18,6 @@ class Chatroom(models.Model):
 
 class Chat(models.Model):
     participants = models.ManyToManyField(User)
-    messages = models.ManyToManyField(Message)
-    files = models.ManyToManyField(Files)
 
     def __str__(self) -> str:
         participants = [
@@ -37,3 +32,15 @@ class Topic(models.Model):
 
     def __str__(self) -> str:
         return self.name
+
+
+class ChatroomMessage(models.Model):
+    chatroom = models.ForeignKey(Chatroom, on_delete=models.CASCADE)
+    sender = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    body = models.CharField(max_length=1000)
+
+
+class ChatMessage(models.Model):
+    chat = models.ForeignKey(Chat, on_delete=models.CASCADE)
+    sender = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    body = models.CharField(max_length=1000)
