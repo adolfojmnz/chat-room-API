@@ -9,6 +9,4 @@ urlpatterns = [
     path('chatrooms', views.ChatListView.as_view(), name='chatrooms'),
     path('chats', views.ChatListView.as_view(), name='chats'),
     path('topics', views.TopicListView.as_view(), name='topics'),
-    path('messages', views.MessageListView.as_view(), name='messages'),
-    path('files', views.FileListView.as_view(), name='files'),
 ]
