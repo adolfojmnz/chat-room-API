@@ -6,14 +6,14 @@ from msg.models import Message, Files
 
 class Chatroom(models.Model):
     name = models.CharField(max_length=255, unique=True)
-    description = models.CharField(max_length=1000)
+    description = models.CharField(max_length=1000, blank=True, default=True)
     creation_date = models.DateField(auto_now=True)
     public = models.BooleanField(default=True)
     min_age_required = models.IntegerField(default=13)
     topics = models.ManyToManyField('chatrooms.Topic')
     participants = models.ManyToManyField(User)
-    messages = models.ForeignKey(Message, on_delete=models.PROTECT)
-    files = models.ForeignKey(Files, on_delete=models.PROTECT)
+    messages = models.ForeignKey(Message, on_delete=models.PROTECT, blank=True, default=True)
+    files = models.ForeignKey(Files, on_delete=models.PROTECT, blank=True, null=True)
 
     def __str__(self) -> str:
         return self.name
@@ -21,8 +21,8 @@ class Chatroom(models.Model):
 
 class Chat(models.Model):
     participants = models.ManyToManyField(User)
-    messages = models.ForeignKey(Message, on_delete=models.PROTECT)
-    files = models.ForeignKey(Files, on_delete=models.PROTECT)
+    messages = models.ForeignKey(Message, on_delete=models.PROTECT, blank=True, null=True)
+    files = models.ForeignKey(Files, on_delete=models.PROTECT, blank=True, null=True)
 
     def __str__(self) -> str:
         return self.messages.all()[-1][:100]
