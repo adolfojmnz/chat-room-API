@@ -1,25 +1,26 @@
 from django.test import TestCase
 
-from accounts.models import CustomUser as User
 from msg.models import Message
+from accounts.tests import CreateTestUserMixin
 
 
-class MessageTest(TestCase):
+class CreateTestMessageMixin:
 
-    def setUp(self):
-        user = User.objects.create(
-            username = 'test-user',
-            email = 'user@testsuit.com',
-            password = 'test$psswd',
-        )
-        user.save()
-        self.user = user
+    def create_test_message(self):
         message = Message.objects.create(
-            sender = user,
+            sender = self.user,
             body = 'test body message',
         )
-        message.save()
-        self.message = message
+        return message
+
+
+class MessageTest(CreateTestUserMixin, TestCase):
+
+    def setUp(self):
+        self.user = self.create_test_user()
+        self.message = self.create_test_message()
+        self.user.save()
+        self.message.save()
 
     def test_message(self):
         self.assertTrue(Message.objects.filter(sender__username=self.user.username).exists())
