@@ -24,7 +24,6 @@ INSTALLED_APPS = [
 
     # my apps
     'accounts',
-    'msg',
     'chatrooms',
     'api.apps.ApiConfig',
 ]
