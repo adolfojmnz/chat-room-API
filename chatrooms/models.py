@@ -35,12 +35,12 @@ class Topic(models.Model):
 
 
 class ChatroomMessage(models.Model):
-    chatroom = models.ForeignKey(Chatroom, on_delete=models.CASCADE)
+    chatroom = models.ForeignKey(Chatroom, on_delete=models.CASCADE, related_name='messages')
     sender = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     body = models.CharField(max_length=1000)
 
 
 class ChatMessage(models.Model):
     chat = models.ForeignKey(Chat, on_delete=models.CASCADE)
-    sender = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    sender = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name='messages')
     body = models.CharField(max_length=1000)
