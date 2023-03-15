@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from accounts.models import CustomUser as User
-from chatrooms.models import Chatroom, Chat, Topic
+from chatrooms.models import Chatroom, Chat, Topic, ChatroomMessage, ChatMessage
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -33,3 +33,17 @@ class TopicSerializer(serializers.ModelSerializer):
     class Meta:
         model = Topic
         fields = ['name', 'description']
+
+
+class ChatroomMessageSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ChatroomMessage
+        fields = ['chatroom', 'sender', 'body']
+
+
+class ChatMessageSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ChatMessage
+        fields = ['chat', 'sender', 'body']
