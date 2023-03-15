@@ -12,8 +12,8 @@ class Chatroom(models.Model):
     min_age_required = models.IntegerField(default=13)
     topics = models.ManyToManyField('chatrooms.Topic')
     participants = models.ManyToManyField(User)
-    messages = models.ForeignKey(Message, on_delete=models.PROTECT, blank=True, default=True)
-    files = models.ForeignKey(Files, on_delete=models.PROTECT, blank=True, null=True)
+    messages = models.ManyToManyField(Message)
+    files = models.ManyToManyField(Files)
 
     def __str__(self) -> str:
         return self.name
@@ -21,8 +21,8 @@ class Chatroom(models.Model):
 
 class Chat(models.Model):
     participants = models.ManyToManyField(User)
-    messages = models.ForeignKey(Message, on_delete=models.PROTECT, blank=True, null=True)
-    files = models.ForeignKey(Files, on_delete=models.PROTECT, blank=True, null=True)
+    messages = models.ManyToManyField(Message)
+    files = models.ManyToManyField(Files)
 
     def __str__(self) -> str:
         return self.messages.all()[-1][:100]
