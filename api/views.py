@@ -19,7 +19,19 @@ class UserListView(ListCreateAPIView):
     serializer_class = UserSerializer
 
 
+class UserDetailView(RetrieveUpdateDestroyAPIView):
+    model = User
+    queryset = model.objects.all()
+    serializer_class = UserSerializer
+
+
 class ChatroomListView(ListCreateAPIView):
+    model = Chatroom
+    queryset = model.objects.all()
+    serializer_class = ChatroomSerializer
+
+
+class ChatroomDetailView(RetrieveUpdateDestroyAPIView):
     model = Chatroom
     queryset = model.objects.all()
     serializer_class = ChatroomSerializer
@@ -31,7 +43,19 @@ class ChatListView(ListCreateAPIView):
     serializer_class = ChatSerializer
 
 
+class ChatDetailView(RetrieveUpdateDestroyAPIView):
+    model = Chat
+    queryset = model.objects.all()
+    serializer_class = ChatSerializer
+
+
 class TopicListView(ListCreateAPIView):
+    model = Topic
+    queryset = model.objects.all()
+    serializer_class = TopicSerializer
+
+
+class TopicDetailView(RetrieveUpdateDestroyAPIView):
     model = Topic
     queryset = model.objects.all()
     serializer_class = TopicSerializer
@@ -43,7 +67,19 @@ class ChatroomMessageListView(ListCreateAPIView):
     serializer_class = ChatroomMessageSerializer
 
 
+class ChatroomMessageDetailView(RetrieveUpdateDestroyAPIView):
+    model = ChatroomMessage
+    queryset = model.objects.all()
+    serializer_class = ChatroomMessageSerializer
+
+
 class ChatMessageListView(ListCreateAPIView):
+    model = ChatMessage
+    queryset = model.objects.all()
+    serializer_class = ChatMessageSerializer
+
+
+class ChatMessageDetailView(RetrieveUpdateDestroyAPIView):
     model = ChatMessage
     queryset = model.objects.all()
     serializer_class = ChatMessageSerializer

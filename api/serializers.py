@@ -13,19 +13,33 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class ChatroomSerializer(serializers.ModelSerializer):
+    topics = serializers.HyperlinkedRelatedField(
+        many = True,
+        read_only = True,
+        view_name = 'api:topic-detail',
+    )
+    participants = serializers.HyperlinkedRelatedField(
+        many = True,
+        read_only = True,
+        view_name = 'api:user-detail',
+    )
 
     class Meta:
         model = Chatroom
         fields = ['name', 'description', 'creation_date', 'public', 'min_age_required', 'topics', 'participants']
-        read_only = ['creation_date', 'topics', 'participants']
+        read_only = ['creation_date']
 
 
 class ChatSerializer(serializers.ModelSerializer):
+    participants = serializers.HyperlinkedRelatedField(
+        many = True,
+        read_only = True,
+        view_name = 'api:user-detail',
+    )
 
     class Meta:
         model = Chat
-        fields = ['participants', 'messages']
-        read_only = ['messages', 'files']
+        fields = ['participants']
 
 
 class TopicSerializer(serializers.ModelSerializer):
@@ -36,6 +50,14 @@ class TopicSerializer(serializers.ModelSerializer):
 
 
 class ChatroomMessageSerializer(serializers.ModelSerializer):
+    chatroom = serializers.HyperlinkedRelatedField(
+        read_only = True,
+        view_name = 'api:chatroom-detail',
+    )
+    sender = serializers.HyperlinkedRelatedField(
+        read_only = True,
+        view_name = 'api:user-detail',
+    )
 
     class Meta:
         model = ChatroomMessage
@@ -43,6 +65,14 @@ class ChatroomMessageSerializer(serializers.ModelSerializer):
 
 
 class ChatMessageSerializer(serializers.ModelSerializer):
+    chat = serializers.HyperlinkedRelatedField(
+        read_only = True,
+        view_name = 'api:chat-detail',
+    )
+    sender = serializers.HyperlinkedRelatedField(
+        read_only = True,
+        view_name = 'api:user-detail',
+    )
 
     class Meta:
         model = ChatMessage
