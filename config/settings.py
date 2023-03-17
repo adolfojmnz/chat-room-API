@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'accounts',
     'chatrooms',
     'api.apps.ApiConfig',
+    'frontend',
 ]
 
 MIDDLEWARE = [
