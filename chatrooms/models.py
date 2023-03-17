@@ -39,8 +39,14 @@ class ChatroomMessage(models.Model):
     sender = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     body = models.CharField(max_length=1000)
 
+    def __str__(self):
+        return f'{self.sender.username}: {self.body[:100]}'
+
 
 class ChatMessage(models.Model):
     chat = models.ForeignKey(Chat, on_delete=models.CASCADE)
     sender = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name='messages')
     body = models.CharField(max_length=1000)
+
+    def __str__(self):
+        return f'{self.sender.username}: {self.body[:100]}'
