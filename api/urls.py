@@ -13,8 +13,8 @@ urlpatterns = [
     path('chats/<int:pk>', views.ChatDetailView.as_view(), name='chat-detail'),
     path('topics', views.TopicListView.as_view(), name='topics'),
     path('topics/<int:pk>', views.TopicDetailView.as_view(), name='topic-detail'),
-    path('chatroom-messages', views.ChatroomMessageListView.as_view(), name='chatroom-messages'),
+    path('chatroom-messages', views.AllChatroomMessagesView.as_view(), name='chatroom-messages'),
     path('chatroom-messages/<int:pk>', views.ChatroomMessageDetailView.as_view(), name='chatroom-message-detail'),
-    path('chat-messages', views.ChatMessageListView.as_view(), name='chat-messages'),
+    path('chat-messages', views.AllChatMessagesView.as_view(), name='chat-messages'),
     path('chat-messages/<int:pk>', views.ChatMessageDetailView.as_view(), name='chat-message-detail'),
 ]
