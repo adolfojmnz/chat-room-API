@@ -1,11 +1,9 @@
-from django.test import TestCase
-from django.test import Client
+from django.test import TestCase, Client
 from django.urls import reverse
 
 from rest_framework import status
 
 from api import serializers
-from accounts.models import CustomUser as User
 from chatrooms.models import Chatroom
 
 
