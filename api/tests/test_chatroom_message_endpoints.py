@@ -7,7 +7,6 @@ from rest_framework.test import APIRequestFactory
 
 from api import serializers
 from chatrooms.models import ChatroomMessage
-from chatrooms.models import Chatroom, User
 
 
 class UserHelperMixin:
