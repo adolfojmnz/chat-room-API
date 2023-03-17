@@ -26,7 +26,7 @@ class ChatroomSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Chatroom
-        fields = ['name', 'description', 'creation_date', 'public', 'min_age_required', 'topics', 'participants']
+        fields = ['id', 'name', 'description', 'creation_date', 'public', 'min_age_required', 'topics', 'participants']
         read_only = ['creation_date']
 
 
