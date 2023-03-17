@@ -49,31 +49,23 @@ class TopicSerializer(serializers.ModelSerializer):
         fields = ['name', 'description']
 
 
-class ChatroomMessageSerializer(serializers.ModelSerializer):
-    chatroom = serializers.HyperlinkedRelatedField(
-        read_only = True,
-        view_name = 'api:chatroom-detail',
-    )
-    sender = serializers.HyperlinkedRelatedField(
-        read_only = True,
-        view_name = 'api:user-detail',
-    )
+class ChatroomMessageSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = ChatroomMessage
         fields = ['chatroom', 'sender', 'body']
+        extra_kwargs = {
+            'chatroom': {'view_name': 'api:chatroom-detail'},
+            'sender': {'view_name': 'api:user-detail'},
+        }
 
 
-class ChatMessageSerializer(serializers.ModelSerializer):
-    chat = serializers.HyperlinkedRelatedField(
-        read_only = True,
-        view_name = 'api:chat-detail',
-    )
-    sender = serializers.HyperlinkedRelatedField(
-        read_only = True,
-        view_name = 'api:user-detail',
-    )
+class ChatMessageSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = ChatMessage
         fields = ['chat', 'sender', 'body']
+        extra_kwargs = {
+            'chat': {'view_name': 'api:chat-detail'},
+            'sender': {'view_name': 'api:user-detail'},
+        }
