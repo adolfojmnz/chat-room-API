@@ -55,7 +55,7 @@ class ChatroomMessageHelperMixin(UserHelperMixin, ChatroomHelperMixin):
             'body': 'test body',
         }
         return self.client.post(
-            reverse('api:chatroom-messages'),
+            reverse('api:messages'),
             self.chatroom_message_data,
         )
 
@@ -76,7 +76,7 @@ class ChatroomMessageHelperMixin(UserHelperMixin, ChatroomHelperMixin):
 class TestChatroomMessageListEndpoint(ChatroomMessageHelperMixin, TestCase):
 
     def setUp(self):
-        self.url = reverse('api:chatroom-messages')
+        self.url = reverse('api:messages')
         self.chatroom = self.create_chatroom()
         self.sender = self.create_user()
         return super().setUp()
@@ -99,7 +99,7 @@ class TestChatroomMessageListEndpoint(ChatroomMessageHelperMixin, TestCase):
 class TestChatroomMessageDetailEndpoint(ChatroomMessageHelperMixin, TestCase):
 
     def setUp(self):
-        self.url = reverse('api:chatroom-message-detail', kwargs={'pk': 1})
+        self.url = reverse('api:message-detail', kwargs={'pk': 1})
         self.chatroom = self.create_chatroom()
         self.sender = self.create_user()
         self.chatroom_message = self.create_chatroom_message()
