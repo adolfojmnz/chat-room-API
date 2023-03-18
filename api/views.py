@@ -52,6 +52,12 @@ class MessageListView(ListCreateAPIView):
     queryset = model.objects.all()
     serializer_class = ChatroomMessageSerializer
 
+    def get(self, request, *args, **kwargs):
+        chatroom_id = request.parser_context['kwargs'].get('pk')
+        if chatroom_id is not None:
+            self.queryset = self.queryset.filter(chatroom_id=chatroom_id)
+        return super().list(request, *args, **kwargs)
+
 
 class MessageDetailView(RetrieveUpdateDestroyAPIView):
     model = Message
