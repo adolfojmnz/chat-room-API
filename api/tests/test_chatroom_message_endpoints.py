@@ -6,7 +6,7 @@ from rest_framework.request import Request
 from rest_framework.test import APIRequestFactory
 
 from api import serializers
-from chatrooms.models import ChatroomMessage
+from chatrooms.models import Message
 
 
 class UserHelperMixin:
@@ -61,13 +61,13 @@ class ChatroomMessageHelperMixin(UserHelperMixin, ChatroomHelperMixin):
 
     def get_chatroom_message_single_serialized(self):
         return serializers.ChatroomMessageSerializer(
-            ChatroomMessage.objects.get(pk=1),
+            Message.objects.get(pk=1),
             context = {'request': self.request},
         )
 
     def get_chatroom_message_list_serialized(self):
         return serializers.ChatroomMessageSerializer(
-            ChatroomMessage.objects.all(),
+            Message.objects.all(),
             many = True,
             context = {'request': self.request}
         )
@@ -93,7 +93,7 @@ class TestChatroomMessageListEndpoint(ChatroomMessageHelperMixin, TestCase):
         serializer = self.get_chatroom_message_single_serialized()
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data, serializer.data)
-        self.assertTrue(ChatroomMessage.objects.filter(pk=1).exists())
+        self.assertTrue(Message.objects.filter(pk=1).exists())
 
 
 class TestChatroomMessageDetailEndpoint(ChatroomMessageHelperMixin, TestCase):
@@ -125,4 +125,4 @@ class TestChatroomMessageDetailEndpoint(ChatroomMessageHelperMixin, TestCase):
     def test_delete(self):
         response = self.client.delete(self.url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertFalse(ChatroomMessage.objects.filter(pk=1).exists())
+        self.assertFalse(Message.objects.filter(pk=1).exists())

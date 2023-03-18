@@ -1,7 +1,7 @@
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 
 from accounts.models import CustomUser as User
-from chatrooms.models import Chatroom, Topic, ChatroomMessage
+from chatrooms.models import Chatroom, Topic, Message
 
 from api.serializers import (
     UserSerializer,
@@ -48,12 +48,12 @@ class TopicDetailView(RetrieveUpdateDestroyAPIView):
 
 
 class MessageListView(ListCreateAPIView):
-    model = ChatroomMessage
+    model = Message
     queryset = model.objects.all()
     serializer_class = ChatroomMessageSerializer
 
 
 class MessageDetailView(RetrieveUpdateDestroyAPIView):
-    model = ChatroomMessage
+    model = Message
     queryset = model.objects.all()
     serializer_class = ChatroomMessageSerializer

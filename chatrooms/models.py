@@ -16,7 +16,7 @@ class Chatroom(models.Model):
         return self.name
 
 
-class ChatroomMessage(models.Model):
+class Message(models.Model):
     chatroom = models.ForeignKey(Chatroom, on_delete=models.CASCADE, related_name='messages')
     sender = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name='messages')
     body = models.CharField(max_length=1000)

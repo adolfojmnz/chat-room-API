@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from chatrooms.models import Chatroom, Topic, ChatroomMessage
+from chatrooms.models import Chatroom, Topic, Message
 from accounts.tests import CreateTestUserMixin
 
 
@@ -14,7 +14,7 @@ class TestChatroomMixin:
         return chatroom
 
     def create_chatroom_message(self):
-        chatroom_message = ChatroomMessage.objects.create(
+        chatroom_message = Message.objects.create(
             chatroom = self.chatroom,
             sender = self.user,
             body = 'Hello, world!',
@@ -48,7 +48,7 @@ class ChatroomTest(CreateTestUserMixin, TestChatroomMixin, TestCase):
         self.assertEqual(chatroom.topics.get(pk=1), self.topic)
 
     def test_chatroom_message(self):
-        chatroom_message = ChatroomMessage.objects.get(pk=1)
+        chatroom_message = Message.objects.get(pk=1)
         self.assertEqual(chatroom_message.chatroom, self.chatroom)
         self.assertEqual(chatroom_message.sender, self.user)
         self.assertEqual(chatroom_message.body, 'Hello, world!')

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from accounts.models import CustomUser as User
-from chatrooms.models import Chatroom, Topic, ChatroomMessage
+from chatrooms.models import Chatroom, Topic, Message
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -33,7 +33,7 @@ class ChatroomSerializer(serializers.ModelSerializer):
 class ChatroomMessageSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
-        model = ChatroomMessage
+        model = Message
         fields = ['chatroom', 'sender', 'body']
         extra_kwargs = {
             'chatroom': {'view_name': 'api:chatroom-detail'},
