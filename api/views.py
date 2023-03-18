@@ -15,6 +15,7 @@ from api.serializers import (
     TopicSerializer,
     MessageSerializer,
 )
+from api.mixins.views import ChatroomParticipantsHelperMixin
 
 
 class UserListView(ListCreateAPIView):
@@ -41,59 +42,19 @@ class ChatroomDetailView(RetrieveUpdateDestroyAPIView):
     serializer_class = ChatroomSerializer
 
 
-class ChatroomParticipantListView(APIView):
+class ChatroomParticipantListView(ChatroomParticipantsHelperMixin, APIView):
     model = User
     queryset = model.objects.all()
     serializer_class = UserSerializer
 
-    def get_chatroom(self, request):
-        pk = request.parser_context['kwargs'].get('pk')
-        if pk is not None:
-            try:
-                return Chatroom.objects.get(pk=pk)
-            except Chatroom.DoesNotExist:
-                return None
-        return None
-
-    def get_participant(self, request):
-        participant_id = request.POST.get('id')
-        if participant_id is not None:
-            try:
-                return User.objects.get(pk=participant_id)
-            except User.DoesNotExist:
-                return None
-        return None
-
     def get(self, request, *args, **kwrags):
-        chatroom = self.get_chatroom(request)
-        if isinstance(chatroom, Chatroom):
-            serializer = UserSerializer(chatroom.participants.all(), many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response({'Bad Request': 'Object not found!'}, status=status.HTTP_404_NOT_FOUND)
+        return self.list_participants(request)
 
     def post(self, request, *args, **kwrags):
-        chatroom = self.get_chatroom(request)
-        participant = self.get_participant(request)
-        if not isinstance(chatroom, Chatroom):
-            return Response({'Bad Request': 'Chatroom not found!'}, status=status.HTTP_404_NOT_FOUND)
-        if not isinstance(participant, User):
-            return Response({'Bad Request': 'Participant not found!'}, status=status.HTTP_404_NOT_FOUND)
-        chatroom.participants.add(participant)
-        chatroom.save()
-        serializer = UserSerializer(chatroom.participants.all(), many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return self.perform_add_or_delete_participant(request)
 
     def delete(self, request, *args, **kwargs):
-        chatroom = self.get_chatroom(request)
-        participant = self.get_participant(request)
-        if not isinstance(chatroom, Chatroom):
-            return Response({'Bad Request': 'Chatroom not found!'}, status=status.HTTP_404_NOT_FOUND)
-        if not isinstance(participant, User):
-            return Response({'Bad Request': 'Participant not found!'}, status=status.HTTP_404_NOT_FOUND)
-        chatroom.participants.remove(participant)
-        chatroom.save()
-        serializer = UserSerializer(chatroom.participants.all(), many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return self.perform_add_or_delete_participant(request)
 
 
 class MessageListView(ListCreateAPIView):
