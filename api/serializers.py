@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from accounts.models import CustomUser as User
-from chatrooms.models import Chatroom, Chat, Topic, ChatroomMessage, ChatMessage
+from chatrooms.models import Chatroom, Topic, ChatroomMessage
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -30,25 +30,6 @@ class ChatroomSerializer(serializers.ModelSerializer):
         read_only = ['creation_date']
 
 
-class ChatSerializer(serializers.ModelSerializer):
-    participants = serializers.HyperlinkedRelatedField(
-        many = True,
-        read_only = True,
-        view_name = 'api:user-detail',
-    )
-
-    class Meta:
-        model = Chat
-        fields = ['participants']
-
-
-class TopicSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Topic
-        fields = ['name', 'description']
-
-
 class ChatroomMessageSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
@@ -60,12 +41,8 @@ class ChatroomMessageSerializer(serializers.HyperlinkedModelSerializer):
         }
 
 
-class ChatMessageSerializer(serializers.HyperlinkedModelSerializer):
+class TopicSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = ChatMessage
-        fields = ['chat', 'sender', 'body']
-        extra_kwargs = {
-            'chat': {'view_name': 'api:chat-detail'},
-            'sender': {'view_name': 'api:user-detail'},
-        }
+        model = Topic
+        fields = ['name', 'description']
