@@ -20,10 +20,10 @@
                     var content = '';
                     content += data[key]['name'];
 
-                    const detailUrl = `http://127.0.0.1:8000/api/chatrooms/${data[key]['id']}`
+                    const chatroomMessages = `http://127.0.0.1:8000/frontend/chatrooms/${data[key]['id']}/messages/`
 
                     a.appendChild(document.createTextNode(content));
-                    a.setAttribute('href', detailUrl)
+                    a.setAttribute('href', chatroomMessages)
                     li.appendChild(a)
                     ul.appendChild(li);
                 }
