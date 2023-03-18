@@ -47,13 +47,13 @@ class TopicDetailView(RetrieveUpdateDestroyAPIView):
     serializer_class = TopicSerializer
 
 
-class AllChatroomMessagesView(ListCreateAPIView):
+class MessageListView(ListCreateAPIView):
     model = ChatroomMessage
     queryset = model.objects.all()
     serializer_class = ChatroomMessageSerializer
 
 
-class ChatroomMessageDetailView(RetrieveUpdateDestroyAPIView):
+class MessageDetailView(RetrieveUpdateDestroyAPIView):
     model = ChatroomMessage
     queryset = model.objects.all()
     serializer_class = ChatroomMessageSerializer
