@@ -7,7 +7,7 @@ from api.serializers import (
     UserSerializer,
     ChatroomSerializer,
     TopicSerializer,
-    ChatroomMessageSerializer,
+    MessageSerializer,
 )
 
 
@@ -50,7 +50,7 @@ class TopicDetailView(RetrieveUpdateDestroyAPIView):
 class MessageListView(ListCreateAPIView):
     model = Message
     queryset = model.objects.all()
-    serializer_class = ChatroomMessageSerializer
+    serializer_class = MessageSerializer
 
     def get(self, request, *args, **kwargs):
         chatroom_id = request.parser_context['kwargs'].get('pk')
@@ -62,4 +62,4 @@ class MessageListView(ListCreateAPIView):
 class MessageDetailView(RetrieveUpdateDestroyAPIView):
     model = Message
     queryset = model.objects.all()
-    serializer_class = ChatroomMessageSerializer
+    serializer_class = MessageSerializer

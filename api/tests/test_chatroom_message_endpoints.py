@@ -60,13 +60,13 @@ class ChatroomMessageHelperMixin(UserHelperMixin, ChatroomHelperMixin):
         )
 
     def get_chatroom_message_single_serialized(self):
-        return serializers.ChatroomMessageSerializer(
+        return serializers.MessageSerializer(
             Message.objects.get(pk=1),
             context = {'request': self.request},
         )
 
     def get_chatroom_message_list_serialized(self):
-        return serializers.ChatroomMessageSerializer(
+        return serializers.MessageSerializer(
             Message.objects.all(),
             many = True,
             context = {'request': self.request}

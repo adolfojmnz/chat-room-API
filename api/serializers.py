@@ -30,7 +30,7 @@ class ChatroomSerializer(serializers.ModelSerializer):
         read_only = ['creation_date']
 
 
-class ChatroomMessageSerializer(serializers.HyperlinkedModelSerializer):
+class MessageSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Message
