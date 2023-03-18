@@ -8,7 +8,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'last_name', 'email', 'bio', 'birthdate', 'last_login', 'date_joined']
+        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'bio', 'birthdate', 'last_login', 'date_joined']
         read_only = ['bio', 'last_login', 'date_joined']
 
 
@@ -34,7 +34,7 @@ class ChatroomMessageSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Message
-        fields = ['chatroom', 'sender', 'body']
+        fields = ['id', 'chatroom', 'sender', 'body']
         extra_kwargs = {
             'chatroom': {'view_name': 'api:chatroom-detail'},
             'sender': {'view_name': 'api:user-detail'},
@@ -45,4 +45,4 @@ class TopicSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Topic
-        fields = ['name', 'description']
+        fields = ['id', 'name', 'description']
