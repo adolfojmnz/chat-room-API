@@ -49,7 +49,10 @@ class ChatroomParticipantListView(APIView):
     def get_chatroom(self, request):
         pk = request.parser_context['kwargs'].get('pk')
         if pk is not None:
-            return Chatroom.objects.get(pk=pk)
+            try:
+                return Chatroom.objects.get(pk=pk)
+            except Chatroom.DoesNotExist:
+                return None
         return None
 
     def get_participant(self, request):
@@ -121,4 +124,3 @@ class TopicDetailView(RetrieveUpdateDestroyAPIView):
     model = Topic
     queryset = model.objects.all()
     serializer_class = TopicSerializer
-
