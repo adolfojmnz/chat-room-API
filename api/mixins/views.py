@@ -19,7 +19,7 @@ class ChatroomParticipantsHelperMixin:
         return None
 
     def get_participant(self, request):
-        participant_id = request.POST.get('id')
+        participant_id = request.data.get('id')
         if participant_id is not None:
             try:
                 return User.objects.get(pk=participant_id)
