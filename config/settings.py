@@ -24,6 +24,7 @@ INSTALLED_APPS = [
 
     # third party
     'rest_framework',
+    'djoser',
 
     # my apps
     'accounts',
