@@ -17,6 +17,7 @@ from api.serializers import (
 )
 from api.mixins.views import (
     ChatroomParticipantsHelperMixin,
+    ChatroomTopicHelperMixin,
 )
 
 
@@ -59,21 +60,7 @@ class ChatroomParticipantListView(ChatroomParticipantsHelperMixin, APIView):
         return self.perform_add_or_delete_participant(request)
 
 
-class ChatroomTopicListView(APIView):
-
-    def get_chatroom_from_request(self, request):
-        chatroom_id = request.parser_context['kwargs'].get('pk')
-        try:
-            return Chatroom.objects.get(pk=chatroom_id)
-        except Chatroom.DoesNotExist:
-            return None
-
-    def get_topic_from_request(self, request):
-        topic_id = request.data.get('id')
-        try:
-            return Topic.objects.get(pk=topic_id)
-        except Topic.DoesNotExist:
-            return None
+class ChatroomTopicListView(ChatroomTopicHelperMixin, APIView):
 
     def get(self, request, *args, **kwargs):
         chatroom = self.get_chatroom_from_request(request)

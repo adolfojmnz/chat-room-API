@@ -2,9 +2,29 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from accounts.models import CustomUser as User
-from chatrooms.models import Chatroom
+from chatrooms.models import Chatroom, Topic
 
 from api.serializers import UserSerializer
+
+
+class GetChatroomMixin:
+
+    def get_chatroom_from_request(self, request):
+        chatroom_id = request.parser_context['kwargs'].get('pk')
+        try:
+            return Chatroom.objects.get(pk=chatroom_id)
+        except Chatroom.DoesNotExist:
+            return None
+
+
+class ChatroomTopicHelperMixin:
+
+    def get_topic_from_request(self, request):
+        topic_id = request.data.get('id')
+        try:
+            return Topic.objects.get(pk=topic_id)
+        except Topic.DoesNotExist:
+            return None
 
 
 class ChatroomParticipantsHelperMixin:
