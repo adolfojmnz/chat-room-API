@@ -4,7 +4,7 @@ from rest_framework import status
 from accounts.models import CustomUser as User
 from chatrooms.models import Chatroom
 
-from api.serializers import UserSerializer, ChatroomSerializer
+from api.serializers import UserSerializer
 
 
 class ChatroomParticipantsHelperMixin:
