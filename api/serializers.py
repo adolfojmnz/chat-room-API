@@ -30,15 +30,21 @@ class ChatroomSerializer(serializers.ModelSerializer):
         read_only = ['creation_date']
 
 
-class MessageSerializer(serializers.HyperlinkedModelSerializer):
+class MessageSerializer(serializers.ModelSerializer):
+    chatroom = serializers.HyperlinkedRelatedField(
+        view_name = 'api:chatroom-detail',
+        read_only = True,
+    )
+    sender = serializers.HyperlinkedRelatedField(
+        view_name = 'api:user-detail',
+        read_only = True,
+    )
+    chatroom_id = serializers.IntegerField(write_only=True)
+    sender_id = serializers.IntegerField(write_only=True)
 
     class Meta:
         model = Message
-        fields = ['id', 'chatroom', 'sender', 'body']
-        extra_kwargs = {
-            'chatroom': {'view_name': 'api:chatroom-detail'},
-            'sender': {'view_name': 'api:user-detail'},
-        }
+        fields = ['id', 'chatroom', 'chatroom_id', 'sender', 'sender_id', 'body']
 
 
 class TopicSerializer(serializers.ModelSerializer):

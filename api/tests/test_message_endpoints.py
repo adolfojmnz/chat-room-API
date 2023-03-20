@@ -50,8 +50,8 @@ class ChatroomMessageHelperMixin(UserHelperMixin, ChatroomHelperMixin):
 
     def create_chatroom_message(self):
         self.chatroom_message_data = {
-            'chatroom': reverse('api:chatroom-detail', kwargs={'pk': 1}),
-            'sender': reverse('api:user-detail', kwargs={'pk': 1}),
+            'chatroom_id': 1,
+            'sender_id': 1,
             'body': 'test body',
         }
         return self.client.post(
