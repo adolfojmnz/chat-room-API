@@ -29,7 +29,7 @@ class ChatroomTopicHelperMixin:
 
 class ChatroomParticipantsHelperMixin(GetChatroomMixin):
 
-    def get_participant(self, request):
+    def get_participant_from_request(self, request):
         participant_id = request.data.get('id')
         if participant_id is not None:
             try:
@@ -47,7 +47,7 @@ class ChatroomParticipantsHelperMixin(GetChatroomMixin):
 
     def perform_add_or_delete_participant(self, request):
         chatroom = self.get_chatroom_from_request(request)
-        participant = self.get_participant(request)
+        participant = self.get_participant_from_request(request)
         if not isinstance(chatroom, Chatroom):
             return Response({'Bad Request': 'Chatroom not found!'}, status=status.HTTP_404_NOT_FOUND)
         if not isinstance(participant, User):
