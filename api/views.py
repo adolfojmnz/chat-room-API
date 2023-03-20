@@ -15,7 +15,9 @@ from api.serializers import (
     TopicSerializer,
     MessageSerializer,
 )
-from api.mixins.views import ChatroomParticipantsHelperMixin
+from api.mixins.views import (
+    ChatroomParticipantsHelperMixin,
+)
 
 
 class UserListView(ListCreateAPIView):
@@ -55,6 +57,38 @@ class ChatroomParticipantListView(ChatroomParticipantsHelperMixin, APIView):
 
     def delete(self, request, *args, **kwargs):
         return self.perform_add_or_delete_participant(request)
+
+
+class ChatroomTopicListView(APIView):
+
+    def get_chatroom_from_request(self, request):
+        chatroom_id = request.parser_context['kwargs'].get('pk')
+        try:
+            return Chatroom.objects.get(pk=chatroom_id)
+        except Chatroom.DoesNotExist:
+            return None
+
+    def get_topic_from_request(self, request):
+        topic_id = request.data.get('id')
+        try:
+            return Topic.objects.get(pk=topic_id)
+        except Topic.DoesNotExist:
+            return None
+
+    def get(self, request, *args, **kwargs):
+        chatroom = self.get_chatroom_from_request(request)
+        serializer = TopicSerializer(chatroom.topics.all(), many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request, *args, **kwargs):
+        chatroom = self.get_chatroom_from_request(request)
+        chatroom.topics.add(self.get_topic_from_request(request))
+        return self.get(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        chatroom = self.get_chatroom_from_request(request)
+        chatroom.topics.remove(self.get_topic_from_request(request))
+        return self.get(request, *args, **kwargs)
 
 
 class MessageListView(ListCreateAPIView):

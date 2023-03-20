@@ -16,6 +16,7 @@ urlpatterns = [
 
     path('chatrooms', views.ChatroomListView.as_view(), name='chatrooms'),
     path('chatrooms/<int:pk>', views.ChatroomDetailView.as_view(), name='chatroom-detail'),
+    path('chatrooms/<int:pk>/topics', views.ChatroomTopicListView.as_view(), name='chatroom-topics'),
     path('chatrooms/<int:pk>/messages', views.MessageListView.as_view(), name='chatroom-messages'),
     path('chatrooms/<int:pk>/participants', views.ChatroomParticipantListView.as_view(), name='chatroom-participants'),
 ]
