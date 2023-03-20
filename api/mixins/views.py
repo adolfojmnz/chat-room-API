@@ -27,16 +27,7 @@ class ChatroomTopicHelperMixin:
             return None
 
 
-class ChatroomParticipantsHelperMixin:
-
-    def get_chatroom(self, request):
-        pk = request.parser_context['kwargs'].get('pk')
-        if pk is not None:
-            try:
-                return Chatroom.objects.get(pk=pk)
-            except Chatroom.DoesNotExist:
-                return None
-        return None
+class ChatroomParticipantsHelperMixin(GetChatroomMixin):
 
     def get_participant(self, request):
         participant_id = request.data.get('id')
@@ -48,14 +39,14 @@ class ChatroomParticipantsHelperMixin:
         return None
 
     def list_participants(self, request):
-        chatroom = self.get_chatroom(request)
+        chatroom = self.get_chatroom_from_request(request)
         if isinstance(chatroom, Chatroom):
             serializer = UserSerializer(chatroom.participants.all(), many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response({'Bad Request': 'Object not found!'}, status=status.HTTP_404_NOT_FOUND)
 
     def perform_add_or_delete_participant(self, request):
-        chatroom = self.get_chatroom(request)
+        chatroom = self.get_chatroom_from_request(request)
         participant = self.get_participant(request)
         if not isinstance(chatroom, Chatroom):
             return Response({'Bad Request': 'Chatroom not found!'}, status=status.HTTP_404_NOT_FOUND)
