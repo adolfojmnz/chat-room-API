@@ -63,19 +63,13 @@ class ChatroomParticipantListView(ChatroomParticipantsHelperMixin, APIView):
 class ChatroomTopicListView(ChatroomTopicHelperMixin, APIView):
 
     def get(self, request, *args, **kwargs):
-        chatroom = self.get_chatroom_from_request(request)
-        serializer = TopicSerializer(chatroom.topics.all(), many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return self.list_topics(request)
 
     def post(self, request, *args, **kwargs):
-        chatroom = self.get_chatroom_from_request(request)
-        chatroom.topics.add(self.get_topic_from_request(request))
-        return self.get(request, *args, **kwargs)
+        return self.perform_add_or_remove_topic(request)
 
     def delete(self, request, *args, **kwargs):
-        chatroom = self.get_chatroom_from_request(request)
-        chatroom.topics.remove(self.get_topic_from_request(request))
-        return self.get(request, *args, **kwargs)
+        return self.perform_add_or_remove_topic(request)
 
 
 class MessageListView(ListCreateAPIView):

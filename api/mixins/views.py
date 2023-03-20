@@ -4,7 +4,10 @@ from rest_framework import status
 from accounts.models import CustomUser as User
 from chatrooms.models import Chatroom, Topic
 
-from api.serializers import UserSerializer
+from api.serializers import (
+    UserSerializer,
+    TopicSerializer,
+)
 
 
 class GetChatroomMixin:
@@ -17,7 +20,7 @@ class GetChatroomMixin:
             return None
 
 
-class ChatroomTopicHelperMixin:
+class ChatroomTopicHelperMixin(GetChatroomMixin):
 
     def get_topic_from_request(self, request):
         topic_id = request.data.get('id')
@@ -25,6 +28,29 @@ class ChatroomTopicHelperMixin:
             return Topic.objects.get(pk=topic_id)
         except Topic.DoesNotExist:
             return None
+
+    def list_topics(self, request):
+        chatroom = self.get_chatroom_from_request(request)
+        if isinstance(chatroom, Chatroom):
+            serializer = TopicSerializer(chatroom.topics.all(), many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({'Bad Request': 'Object not found!'}, status=status.HTTP_404_NOT_FOUND)
+
+    def perform_add_or_remove_topic(self, request):
+        chatroom = self.get_chatroom_from_request(request)
+        if not isinstance(chatroom, Chatroom):
+            return Response({'Bad Request': f'Chatroom not found!'}, status=status.HTTP_404_NOT_FOUND)
+        topic = self.get_topic_from_request(request)
+        if not isinstance(topic, Topic):
+            return Response({'Bad Request': f'Topic not found!'}, status=status.HTTP_404_NOT_FOUND)
+
+        if request.method == 'POST':
+            chatroom.topics.add(topic)
+        if request.method == 'DELETE':
+            chatroom.topics.remove(topic)
+
+        serializer = TopicSerializer(chatroom.topics.all(), many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class ChatroomParticipantsHelperMixin(GetChatroomMixin):
