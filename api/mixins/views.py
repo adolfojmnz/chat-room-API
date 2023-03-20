@@ -31,12 +31,10 @@ class ChatroomParticipantsHelperMixin(GetChatroomMixin):
 
     def get_participant_from_request(self, request):
         participant_id = request.data.get('id')
-        if participant_id is not None:
-            try:
-                return User.objects.get(pk=participant_id)
-            except User.DoesNotExist:
-                return None
-        return None
+        try:
+            return User.objects.get(pk=participant_id)
+        except User.DoesNotExist:
+            return None
 
     def list_participants(self, request):
         chatroom = self.get_chatroom_from_request(request)
