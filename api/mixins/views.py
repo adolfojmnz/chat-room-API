@@ -47,15 +47,16 @@ class ChatroomParticipantsHelperMixin(GetChatroomMixin):
 
     def perform_add_or_delete_participant(self, request):
         chatroom = self.get_chatroom_from_request(request)
-        participant = self.get_participant_from_request(request)
         if not isinstance(chatroom, Chatroom):
-            return Response({'Bad Request': 'Chatroom not found!'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'Bad Request': f'Chatroom not found!'}, status=status.HTTP_404_NOT_FOUND)
+        participant = self.get_participant_from_request(request)
         if not isinstance(participant, User):
-            return Response({'Bad Request': 'Participant not found!'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'Bad Request': f'Participant not found!'}, status=status.HTTP_404_NOT_FOUND)
+
         if request.method == 'POST':
             chatroom.participants.add(participant)
         if request.method == 'DELETE':
             chatroom.participants.remove(participant)
-        chatroom.save()
+
         serializer = UserSerializer(chatroom.participants.all(), many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
