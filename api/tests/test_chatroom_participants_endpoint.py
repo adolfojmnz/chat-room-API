@@ -2,12 +2,10 @@ from django.test import TestCase, Client
 from django.urls import reverse
 
 from rest_framework import status
-from rest_framework.request import Request
-from rest_framework.test import APIRequestFactory
 
 from api import serializers
 from accounts.models import CustomUser as User
-from chatrooms.models import Chatroom, Message
+from chatrooms.models import Chatroom
 
 import json
 
