@@ -3,8 +3,6 @@ from rest_framework.generics import (
     ListCreateAPIView,
     RetrieveUpdateDestroyAPIView,
 )
-from rest_framework.response import Response
-from rest_framework import status
 
 from accounts.models import CustomUser as User
 from chatrooms.models import Chatroom, Topic, Message
@@ -31,45 +29,6 @@ class UserDetailView(RetrieveUpdateDestroyAPIView):
     model = User
     queryset = model.objects.all()
     serializer_class = UserSerializer
-
-
-class ChatroomListView(ListCreateAPIView):
-    model = Chatroom
-    queryset = model.objects.all()
-    serializer_class = ChatroomSerializer
-
-
-class ChatroomDetailView(RetrieveUpdateDestroyAPIView):
-    model = Chatroom
-    queryset = model.objects.all()
-    serializer_class = ChatroomSerializer
-
-
-class ChatroomParticipantListView(ChatroomParticipantsHelperMixin, APIView):
-    model = User
-    queryset = model.objects.all()
-    serializer_class = UserSerializer
-
-    def get(self, request, *args, **kwrags):
-        return self.list_participants(request)
-
-    def post(self, request, *args, **kwrags):
-        return self.perform_add_or_delete_participant(request)
-
-    def delete(self, request, *args, **kwargs):
-        return self.perform_add_or_delete_participant(request)
-
-
-class ChatroomTopicListView(ChatroomTopicHelperMixin, APIView):
-
-    def get(self, request, *args, **kwargs):
-        return self.list_topics(request)
-
-    def post(self, request, *args, **kwargs):
-        return self.perform_add_or_remove_topic(request)
-
-    def delete(self, request, *args, **kwargs):
-        return self.perform_add_or_remove_topic(request)
 
 
 class MessageListView(ListCreateAPIView):
@@ -100,3 +59,39 @@ class TopicDetailView(RetrieveUpdateDestroyAPIView):
     model = Topic
     queryset = model.objects.all()
     serializer_class = TopicSerializer
+
+
+class ChatroomListView(ListCreateAPIView):
+    model = Chatroom
+    queryset = model.objects.all()
+    serializer_class = ChatroomSerializer
+
+
+class ChatroomDetailView(RetrieveUpdateDestroyAPIView):
+    model = Chatroom
+    queryset = model.objects.all()
+    serializer_class = ChatroomSerializer
+
+
+class ChatroomParticipantListView(ChatroomParticipantsHelperMixin, APIView):
+
+    def get(self, request, *args, **kwrags):
+        return self.list_participants(request)
+
+    def post(self, request, *args, **kwrags):
+        return self.perform_add_or_delete_participant(request)
+
+    def delete(self, request, *args, **kwargs):
+        return self.perform_add_or_delete_participant(request)
+
+
+class ChatroomTopicListView(ChatroomTopicHelperMixin, APIView):
+
+    def get(self, request, *args, **kwargs):
+        return self.list_topics(request)
+
+    def post(self, request, *args, **kwargs):
+        return self.perform_add_or_remove_topic(request)
+
+    def delete(self, request, *args, **kwargs):
+        return self.perform_add_or_remove_topic(request)
