@@ -1,3 +1,4 @@
+from django.contrib.auth.hashers import make_password
 from rest_framework import serializers
 
 from accounts.models import CustomUser as User
@@ -8,8 +9,15 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'bio', 'birthdate', 'last_login', 'date_joined']
+        fields = ['id', 'username', 'password', 'first_name', 'last_name', 'email', 'bio', 'birthdate', 'last_login', 'date_joined']
         read_only = ['bio', 'last_login', 'date_joined']
+        extra_kwargs = {
+            'password': {'write_only': True},
+        }
+
+    def save(self, **kwargs):
+        self.validated_data['password'] = make_password(self.validated_data['password'])
+        return super().save(**kwargs)
 
 
 class ChatroomSerializer(serializers.ModelSerializer):
