@@ -17,8 +17,8 @@ class Chatroom(models.Model):
 
 
 class Message(models.Model):
-    chatroom = models.ForeignKey(Chatroom, on_delete=models.CASCADE, related_name='messages')
-    sender = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name='messages')
+    chatroom = models.ForeignKey(Chatroom, blank=True, on_delete=models.CASCADE, related_name='messages')
+    sender = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL, related_name='messages')
     body = models.CharField(max_length=1000)
 
     def __str__(self):
