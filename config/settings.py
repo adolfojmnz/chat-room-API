@@ -25,7 +25,7 @@ INSTALLED_APPS = [
 
     # third party
     'rest_framework',
-    'djoser',
+    # 'djoser',
     'rest_framework_simplejwt',
 
     # my apps
