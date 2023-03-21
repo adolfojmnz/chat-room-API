@@ -7,6 +7,8 @@ from chatrooms.models import Chatroom, Topic
 from api.serializers import (
     UserSerializer,
     TopicSerializer,
+    MessageSerializer,
+    ChatroomMessageSerialzier,
 )
 
 
@@ -84,3 +86,29 @@ class ChatroomParticipantsHelperMixin(GetChatroomMixin):
 
         serializer = UserSerializer(chatroom.participants.all(), many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class ChatroomMessageHelperMixin(GetChatroomMixin):
+
+    def list_messages(self, request, *args, **kwargs):
+        chatroom = self.get_chatroom_from_request(request)
+        serializer = MessageSerializer(
+            chatroom.messages.all(),
+            many = True,
+            context = {'request': request},
+        )
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def send_message(self, request, *args, **kwargs):
+        serializer = ChatroomMessageSerialzier(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        chatroom = self.get_chatroom_from_request(request)
+        if isinstance(chatroom, Chatroom):
+            serializer.validated_data['chatroom'] = chatroom
+        if isinstance(request.user, User):
+            serializer.validated_data['sender'] = request.user
+        serializer.save()
+        return Response(
+            ChatroomMessageSerialzier(chatroom.messages.all(), many=True).data,
+            status=status.HTTP_201_CREATED,
+        )

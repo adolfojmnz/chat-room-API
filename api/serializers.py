@@ -52,3 +52,10 @@ class TopicSerializer(serializers.ModelSerializer):
     class Meta:
         model = Topic
         fields = ['id', 'name', 'description']
+
+
+class ChatroomMessageSerialzier(serializers.ModelSerializer):
+
+    class Meta:
+        model = Message
+        fields = ['id', 'chatroom', 'sender', 'body']

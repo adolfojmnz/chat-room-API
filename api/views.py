@@ -16,6 +16,7 @@ from api.serializers import (
 from api.mixins.views import (
     ChatroomParticipantsHelperMixin,
     ChatroomTopicHelperMixin,
+    ChatroomMessageHelperMixin,
 )
 
 
@@ -35,12 +36,6 @@ class MessageListView(ListCreateAPIView):
     model = Message
     queryset = model.objects.all()
     serializer_class = MessageSerializer
-
-    def get(self, request, *args, **kwargs):
-        chatroom_id = request.parser_context['kwargs'].get('pk')
-        if chatroom_id is not None:
-            self.queryset = self.queryset.filter(chatroom_id=chatroom_id)
-        return super().list(request, *args, **kwargs)
 
 
 class MessageDetailView(RetrieveUpdateDestroyAPIView):
@@ -95,3 +90,12 @@ class ChatroomTopicListView(ChatroomTopicHelperMixin, APIView):
 
     def delete(self, request, *args, **kwargs):
         return self.perform_add_or_remove_topic(request)
+
+
+class ChatroomMessageListView(ChatroomMessageHelperMixin, APIView):
+
+    def get(self, request, *args, **kwargs):
+        return self.list_messages(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return self.send_message(request, *args, **kwargs)
