@@ -156,12 +156,12 @@ class ChatroomParticipantsHelperMixin(GetUserMixin, GetChatroomMixin):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class ChatroomMessageHelperMixin(GetChatroomMixin):
+class ChatroomMessageHelperMixin(GetMessageMixin, GetChatroomMixin):
 
     def list_messages(self, request, *args, **kwargs):
         chatroom = self.get_chatroom_from_request(request)
         serializer = MessageSerializer(
-            chatroom.messages.all(),
+            self.get_queryset(queryset=chatroom.messages.all()),
             many = True,
             context = {'request': request},
         )
