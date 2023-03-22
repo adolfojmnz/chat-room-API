@@ -71,6 +71,25 @@ class ChatroomTopicHelperMixin(GetChatroomMixin):
 
 class ChatroomParticipantsHelperMixin(GetChatroomMixin):
 
+    def get_queryset(self):
+        chatroom = self.get_chatroom_from_request(self.request)
+        self.queryset = chatroom.participants.all()
+
+        username = self.request.query_params.get('username')
+        if username is not None:
+            self.queryset = self.queryset.filter(username=username).distinct()
+        first_name = self.request.query_params.get('first_name')
+        if first_name is not None:
+            self.queryset = self.queryset.filter(first_name__icontains=first_name).distinct()
+        last_name = self.request.query_params.get('last_name')
+        if last_name is not None:
+            self.queryset = self.queryset.filter(last_name__icontains=last_name).distinct()
+        email = self.request.query_params.get('email')
+        if email is not None:
+            self.queryset = self.queryset.filter(email__icontains=email)
+
+        return self.queryset
+
     def get_participant_from_request(self, request):
         participant_id = request.data.get('id')
         try:
@@ -81,7 +100,7 @@ class ChatroomParticipantsHelperMixin(GetChatroomMixin):
     def list_participants(self, request):
         chatroom = self.get_chatroom_from_request(request)
         if isinstance(chatroom, Chatroom):
-            serializer = UserSerializer(chatroom.participants.all(), many=True)
+            serializer = UserSerializer(self.get_queryset(), many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response({'Bad Request': 'Object not found!'}, status=status.HTTP_404_NOT_FOUND)
 
