@@ -33,21 +33,6 @@ class GetUserMixin:
         return self.queryset
 
 
-class GetMessageMixin:
-
-    def get_queryset(self, queryset=None):
-        self.queryset = queryset if queryset is not None else self.queryset
-
-        body = self.request.query_params.get('body')
-        if body is not None:
-            self.queryset = self.queryset.filter(body__icontains=body).distinct()
-        sender = self.request.query_params.get('sender')
-        if sender is not None:
-            self.queryset = self.queryset.filter(sender__username=sender)
-
-        return self.queryset
-
-
 class GetTopicMixin:
 
     def get_queryset(self, queryset=None):
@@ -59,6 +44,21 @@ class GetTopicMixin:
         description = self.request.query_params.get('description')
         if description is not None:
             self.queryset = self.queryset.filter(description__icontains=description)
+
+        return self.queryset
+
+
+class GetMessageMixin:
+
+    def get_queryset(self, queryset=None):
+        self.queryset = queryset if queryset is not None else self.queryset
+
+        body = self.request.query_params.get('body')
+        if body is not None:
+            self.queryset = self.queryset.filter(body__icontains=body).distinct()
+        sender = self.request.query_params.get('sender')
+        if sender is not None:
+            self.queryset = self.queryset.filter(sender__username=sender)
 
         return self.queryset
 
@@ -90,13 +90,13 @@ class UserListViewHelperMixin(GetUserMixin):
         return super().get_queryset(queryset)
 
 
-class MessageListHelperMixin(GetMessageMixin):
+class TopicListHelperMixin(GetTopicMixin):
 
     def get_queryset(self, queryset=None):
         return super().get_queryset(queryset)
 
 
-class TopicListHelperMixin(GetTopicMixin):
+class MessageListHelperMixin(GetMessageMixin):
 
     def get_queryset(self, queryset=None):
         return super().get_queryset(queryset)
@@ -144,6 +144,32 @@ class ChatroomTopicHelperMixin(GetTopicMixin, GetChatroomMixin):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+class ChatroomMessageHelperMixin(GetMessageMixin, GetChatroomMixin):
+
+    def list_messages(self, request, *args, **kwargs):
+        chatroom = self.get_chatroom_from_request(request)
+        serializer = MessageSerializer(
+            self.get_queryset(queryset=chatroom.messages.all()),
+            many = True,
+            context = {'request': request},
+        )
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def send_message(self, request, *args, **kwargs):
+        serializer = ChatroomMessageSerialzier(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        chatroom = self.get_chatroom_from_request(request)
+        if isinstance(chatroom, Chatroom):
+            serializer.validated_data['chatroom'] = chatroom
+        if isinstance(request.user, User):
+            serializer.validated_data['sender'] = request.user
+        serializer.save()
+        return Response(
+            ChatroomMessageSerialzier(chatroom.messages.all(), many=True).data,
+            status=status.HTTP_201_CREATED,
+        )
+
+
 class ChatroomParticipantsHelperMixin(GetUserMixin, GetChatroomMixin):
 
     def get_queryset(self, queryset=None):
@@ -181,29 +207,3 @@ class ChatroomParticipantsHelperMixin(GetUserMixin, GetChatroomMixin):
 
         serializer = UserSerializer(chatroom.participants.all(), many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-class ChatroomMessageHelperMixin(GetMessageMixin, GetChatroomMixin):
-
-    def list_messages(self, request, *args, **kwargs):
-        chatroom = self.get_chatroom_from_request(request)
-        serializer = MessageSerializer(
-            self.get_queryset(queryset=chatroom.messages.all()),
-            many = True,
-            context = {'request': request},
-        )
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    def send_message(self, request, *args, **kwargs):
-        serializer = ChatroomMessageSerialzier(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        chatroom = self.get_chatroom_from_request(request)
-        if isinstance(chatroom, Chatroom):
-            serializer.validated_data['chatroom'] = chatroom
-        if isinstance(request.user, User):
-            serializer.validated_data['sender'] = request.user
-        serializer.save()
-        return Response(
-            ChatroomMessageSerialzier(chatroom.messages.all(), many=True).data,
-            status=status.HTTP_201_CREATED,
-        )
