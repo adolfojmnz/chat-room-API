@@ -72,6 +72,17 @@ class GetChatroomMixin:
         except Chatroom.DoesNotExist:
             return None
 
+    def get_queryset(self):
+        self.queryset = self.queryset.filter(public=True)
+
+        name = self.request.query_params.get('name')
+        topic = self.request.query_params.get('topic')
+        if name is not None:
+            self.queryset = self.queryset.filter(name__icontains=name).distinct()
+        if topic is not None:
+            self.queryset = self.queryset.filter(topics__name__icontains=topic).distinct()
+        return self.queryset
+
 
 class UserListViewHelperMixin(GetUserMixin):
 
@@ -91,18 +102,10 @@ class TopicListHelperMixin(GetTopicMixin):
         return super().get_queryset(queryset)
 
 
-class ChatroomListHelperMixin:
+class ChatroomListHelperMixin(GetChatroomMixin):
 
     def get_queryset(self):
-        self.queryset = self.queryset.filter(public=True)
-
-        name = self.request.query_params.get('name')
-        topic = self.request.query_params.get('topic')
-        if name is not None:
-            self.queryset = self.queryset.filter(name__icontains=name).distinct()
-        if topic is not None:
-            self.queryset = self.queryset.filter(topics__name__icontains=topic).distinct()
-        return self.queryset
+        return super().get_queryset()
 
 
 class ChatroomTopicHelperMixin(GetTopicMixin, GetChatroomMixin):
