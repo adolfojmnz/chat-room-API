@@ -105,7 +105,7 @@ class ChatroomListHelperMixin:
         return self.queryset
 
 
-class ChatroomTopicHelperMixin(GetChatroomMixin):
+class ChatroomTopicHelperMixin(GetTopicMixin, GetChatroomMixin):
 
     def get_topic_from_request(self, request):
         topic_id = request.data.get('id')
@@ -117,7 +117,10 @@ class ChatroomTopicHelperMixin(GetChatroomMixin):
     def list_topics(self, request):
         chatroom = self.get_chatroom_from_request(request)
         if isinstance(chatroom, Chatroom):
-            serializer = TopicSerializer(chatroom.topics.all(), many=True)
+            serializer = TopicSerializer(
+                self.get_queryset(queryset=chatroom.topics.all()),
+                many = True,
+            )
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response({'Bad Request': 'Object not found!'}, status=status.HTTP_404_NOT_FOUND)
 
