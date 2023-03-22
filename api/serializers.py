@@ -41,7 +41,10 @@ class MessageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Message
-        fields = ['id', 'chatroom', 'chatroom_id', 'sender', 'sender_id', 'body']
+        fields = ['id', 'chatroom', 'chatroom_id', 'sender', 'sender_id', 'body', 'datetime']
+        extra_kwargs = {
+            'datetime': {'read_only': True}
+        }
 
 
 class ChatroomSerializer(serializers.ModelSerializer):
