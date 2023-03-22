@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 from accounts.models import CustomUser as User
 
@@ -20,6 +21,7 @@ class Message(models.Model):
     chatroom = models.ForeignKey(Chatroom, blank=True, on_delete=models.CASCADE, related_name='messages')
     sender = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL, related_name='messages')
     body = models.CharField(max_length=1000)
+    datetime = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f'{self.sender.username}: {self.body[:100]}'
