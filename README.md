@@ -83,7 +83,7 @@ DATABASES = {
 ```python
 DATABASES = {
     'default': {
-				'ENGINE': 'django.db.backends.postgresql',
+	'ENGINE': 'django.db.backends.postgresql',
         'NAME': '<database_name>',
         'HOST': 'localhost',
         'PORT': '5432',
