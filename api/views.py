@@ -14,6 +14,7 @@ from api.serializers import (
     MessageSerializer,
 )
 from api.mixins.views import (
+    ChatroomListHelperMixin,
     ChatroomParticipantsHelperMixin,
     ChatroomTopicHelperMixin,
     ChatroomMessageHelperMixin,
@@ -56,7 +57,7 @@ class TopicDetailView(RetrieveUpdateDestroyAPIView):
     serializer_class = TopicSerializer
 
 
-class ChatroomListView(ListCreateAPIView):
+class ChatroomListView(ChatroomListHelperMixin, ListCreateAPIView):
     model = Chatroom
     queryset = model.objects.all()
     serializer_class = ChatroomSerializer
