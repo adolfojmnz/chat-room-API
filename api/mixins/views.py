@@ -12,6 +12,27 @@ from api.serializers import (
 )
 
 
+class GetUserMixin:
+
+    def get_queryset(self, queryset=None):
+        self.queryset = queryset if queryset is not None else self.queryset
+
+        username = self.request.query_params.get('username')
+        if username is not None:
+            self.queryset = self.queryset.filter(username__icontains=username).distinct()
+        first_name = self.request.query_params.get('first_name')
+        if first_name is not None:
+            self.queryset = self.queryset.filter(first_name__icontains=first_name).distinct()
+        last_name = self.request.query_params.get('last_name')
+        if last_name is not None:
+            self.queryset = self.queryset.filter(last_name__icontains=last_name).distinct()
+        email = self.request.query_params.get('email')
+        if email is not None:
+            self.queryset = self.queryset.filter(email__icontains=email)
+
+        return self.queryset
+
+
 class GetChatroomMixin:
 
     def get_chatroom_from_request(self, request):
@@ -20,6 +41,12 @@ class GetChatroomMixin:
             return Chatroom.objects.get(pk=chatroom_id)
         except Chatroom.DoesNotExist:
             return None
+
+
+class UserListViewHelperMixin(GetUserMixin):
+
+    def get_queryset(self, queryset=None):
+        return super().get_queryset(queryset)
 
 
 class ChatroomListHelperMixin:
@@ -69,26 +96,10 @@ class ChatroomTopicHelperMixin(GetChatroomMixin):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class ChatroomParticipantsHelperMixin(GetChatroomMixin):
+class ChatroomParticipantsHelperMixin(GetUserMixin, GetChatroomMixin):
 
-    def get_queryset(self):
-        chatroom = self.get_chatroom_from_request(self.request)
-        self.queryset = chatroom.participants.all()
-
-        username = self.request.query_params.get('username')
-        if username is not None:
-            self.queryset = self.queryset.filter(username=username).distinct()
-        first_name = self.request.query_params.get('first_name')
-        if first_name is not None:
-            self.queryset = self.queryset.filter(first_name__icontains=first_name).distinct()
-        last_name = self.request.query_params.get('last_name')
-        if last_name is not None:
-            self.queryset = self.queryset.filter(last_name__icontains=last_name).distinct()
-        email = self.request.query_params.get('email')
-        if email is not None:
-            self.queryset = self.queryset.filter(email__icontains=email)
-
-        return self.queryset
+    def get_queryset(self, queryset=None):
+        return super().get_queryset(queryset)
 
     def get_participant_from_request(self, request):
         participant_id = request.data.get('id')
@@ -100,7 +111,10 @@ class ChatroomParticipantsHelperMixin(GetChatroomMixin):
     def list_participants(self, request):
         chatroom = self.get_chatroom_from_request(request)
         if isinstance(chatroom, Chatroom):
-            serializer = UserSerializer(self.get_queryset(), many=True)
+            serializer = UserSerializer(
+                self.get_queryset(queryset=chatroom.participants.all()),
+                many = True,
+            )
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response({'Bad Request': 'Object not found!'}, status=status.HTTP_404_NOT_FOUND)
 
