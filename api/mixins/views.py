@@ -48,6 +48,21 @@ class GetMessageMixin:
         return self.queryset
 
 
+class GetTopicMixin:
+
+    def get_queryset(self, queryset=None):
+        self.queryset = queryset if queryset is not None else self.queryset
+
+        name = self.request.query_params.get('name')
+        if name is not None:
+            self.queryset =  self.queryset.filter(name__icontains=name)
+        description = self.request.query_params.get('description')
+        if description is not None:
+            self.queryset = self.queryset.filter(description__icontains=description)
+
+        return self.queryset
+
+
 class GetChatroomMixin:
 
     def get_chatroom_from_request(self, request):
@@ -65,6 +80,12 @@ class UserListViewHelperMixin(GetUserMixin):
 
 
 class MessageListHelperMixin(GetMessageMixin):
+
+    def get_queryset(self, queryset=None):
+        return super().get_queryset(queryset)
+
+
+class TopicListHelperMixin(GetTopicMixin):
 
     def get_queryset(self, queryset=None):
         return super().get_queryset(queryset)
