@@ -22,6 +22,20 @@ class GetChatroomMixin:
             return None
 
 
+class ChatroomListHelperMixin:
+
+    def get_queryset(self):
+        self.queryset = self.queryset.filter(public=True)
+
+        name = self.request.query_params.get('name')
+        topic = self.request.query_params.get('topic')
+        if name is not None:
+            self.queryset = self.queryset.filter(name__icontains=name).distinct()
+        if topic is not None:
+            self.queryset = self.queryset.filter(topics__name__icontains=topic).distinct()
+        return self.queryset
+
+
 class ChatroomTopicHelperMixin(GetChatroomMixin):
 
     def get_topic_from_request(self, request):
