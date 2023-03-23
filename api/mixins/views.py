@@ -1,3 +1,4 @@
+from rest_framework.settings import api_settings
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -106,6 +107,31 @@ class ChatroomListHelperMixin(GetChatroomMixin):
 
     def get_queryset(self):
         return super().get_queryset()
+
+    def create(self, request, *args, **kwargs):
+        """
+            Method that creates a Chatroom object and append the user
+            in the requets to the 'admins' attribute on the Chatroom object.
+        """
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        self.add_admin(request, serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def perform_create(self, serializer):
+        serializer.save()
+
+    def add_admin(self, request, serializer):
+        admin = request.user
+        Chatroom.objects.get(name=serializer.validated_data['name']).admins.add(admin)
+
+    def get_success_headers(self, data):
+        try:
+            return {'Location': str(data[api_settings.URL_FIELD_NAME])}
+        except (TypeError, KeyError):
+            return {}
 
 
 class ChatroomTopicHelperMixin(GetTopicMixin, GetChatroomMixin):

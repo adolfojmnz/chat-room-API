@@ -1,5 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.generics import (
+    ListAPIView,
     ListCreateAPIView,
     RetrieveUpdateDestroyAPIView,
 )
@@ -63,10 +64,13 @@ class MessageDetailView(RetrieveUpdateDestroyAPIView):
     serializer_class = MessageSerializer
 
 
-class ChatroomListView(ChatroomListHelperMixin, ListCreateAPIView):
+class ChatroomListView(ChatroomListHelperMixin, ListAPIView):
     model = Chatroom
     queryset = model.objects.all()
     serializer_class = ChatroomSerializer
+
+    def post(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
 
 
 class ChatroomDetailView(RetrieveUpdateDestroyAPIView):
