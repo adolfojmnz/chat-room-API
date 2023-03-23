@@ -22,15 +22,18 @@ from api.mixins.views import (
     ChatroomTopicHelperMixin,
     ChatroomMessageHelperMixin,
 )
+from api.mixins.permissions import (
+    UserPermissionsMixin,
+)
 
 
-class UserListView(UserListViewHelperMixin, ListCreateAPIView):
+class UserListView(UserPermissionsMixin, UserListViewHelperMixin, ListCreateAPIView):
     model = User
     queryset = model.objects.all()
     serializer_class = UserSerializer
 
 
-class UserDetailView(RetrieveUpdateDestroyAPIView):
+class UserDetailView(UserPermissionsMixin, RetrieveUpdateDestroyAPIView):
     model = User
     queryset = model.objects.all()
     serializer_class = UserSerializer
