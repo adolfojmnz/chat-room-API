@@ -9,7 +9,10 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'password', 'first_name', 'last_name', 'email', 'bio', 'birthdate', 'last_login', 'date_joined']
+        fields = [
+            'id', 'username', 'password', 'first_name', 'last_name', 'email', 'bio',
+            'birthdate', 'last_login', 'date_joined',
+        ]
         read_only = ['bio', 'last_login', 'date_joined']
         extra_kwargs = {
             'password': {'write_only': True},
@@ -42,7 +45,9 @@ class MessageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Message
-        fields = ['id', 'chatroom', 'chatroom_id', 'sender', 'sender_id', 'body', 'datetime']
+        fields = [
+            'id', 'chatroom', 'chatroom_id', 'sender', 'sender_id', 'body', 'datetime',
+        ]
         extra_kwargs = {
             'datetime': {'read_only': True}
         }
@@ -59,10 +64,18 @@ class ChatroomSerializer(serializers.ModelSerializer):
         read_only = True,
         view_name = 'api:user-detail',
     )
+    admins = serializers.HyperlinkedRelatedField(
+        many = True,
+        read_only = True,
+        view_name = 'api:user-detail',
+    )
 
     class Meta:
         model = Chatroom
-        fields = ['id', 'name', 'description', 'creation_date', 'public', 'min_age_required', 'topics', 'participants']
+        fields = [
+            'id', 'name', 'description', 'creation_date', 'public',
+            'min_age_required', 'topics', 'participants', 'admins',
+        ]
         read_only = ['creation_date']
 
 
