@@ -221,7 +221,7 @@ The project consists of a total of eleven (11) endpoints, such endpoints provide
 | POST | body | Creates a message and adds it to the chatroom | 200 |
 
 <aside>
-    💡 The DELETE method can be call on the message object by using the api/messages/{messageId} endpoint.
+    💡 The <em><strong>DELETE</strong></em> method can be call on the message object by using the <em><strong>api/messages/{messageId}</strong></em> endpoint.
 </aside>
 
 ### api/chatrooms/{chatroomId}/participants
