@@ -9,6 +9,7 @@ djangorestframework = "*"
 django-environ = "*"
 djangorestframework-simplejwt = "*"
 django-filter = "*"
+psycopg2 = {extras = ["binary"], version = "*"}
 
 [dev-packages]
 
