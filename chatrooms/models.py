@@ -12,6 +12,7 @@ class Chatroom(models.Model):
     min_age_required = models.IntegerField(default=13)
     topics = models.ManyToManyField('chatrooms.Topic', related_name='chatrooms')
     participants = models.ManyToManyField(User, related_name='chatrooms')
+    admins = models.ManyToManyField(User, related_name='admin_of_chatrooms')
 
     def __str__(self) -> str:
         return self.name
