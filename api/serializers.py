@@ -16,7 +16,8 @@ class UserSerializer(serializers.ModelSerializer):
         }
 
     def save(self, **kwargs):
-        self.validated_data['password'] = make_password(self.validated_data['password'])
+        if self.validated_data.get('password') is not None:
+            self.validated_data['password'] = make_password(self.validated_data['password'])
         return super().save(**kwargs)
 
 
