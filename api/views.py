@@ -15,20 +15,20 @@ from api.serializers import (
     ChatroomSerializer,
 )
 from api.mixins.views import (
-    UserListViewHelperMixin,
-    MessageListHelperMixin,
-    TopicListHelperMixin,
-    ChatroomListHelperMixin,
-    ChatroomParticipantsHelperMixin,
-    ChatroomTopicHelperMixin,
-    ChatroomMessageHelperMixin,
+    UserListViewMixin,
+    MessageListViewMixin,
+    TopicListViewMixin,
+    ChatroomListViewMixin,
+    ChatroomParticipantListViewMixin,
+    ChatroomTopicListViewMixin,
+    ChatroomMessageListViewMixin,
 )
 from api.mixins.permissions import (
     UserPermissionsMixin,
 )
 
 
-class UserListView(UserPermissionsMixin, UserListViewHelperMixin, ListCreateAPIView):
+class UserListView(UserPermissionsMixin, UserListViewMixin, ListCreateAPIView):
     model = User
     queryset = model.objects.all()
     serializer_class = UserSerializer
@@ -40,7 +40,7 @@ class UserDetailView(UserPermissionsMixin, RetrieveUpdateDestroyAPIView):
     serializer_class = UserSerializer
 
 
-class TopicListView(TopicListHelperMixin, ListCreateAPIView):
+class TopicListView(TopicListViewMixin, ListCreateAPIView):
     model = Topic
     queryset = model.objects.all()
     serializer_class = TopicSerializer
@@ -52,7 +52,7 @@ class TopicDetailView(RetrieveUpdateDestroyAPIView):
     serializer_class = TopicSerializer
 
 
-class MessageListView(MessageListHelperMixin, ListCreateAPIView):
+class MessageListView(MessageListViewMixin, ListCreateAPIView):
     model = Message
     queryset = model.objects.all()
     serializer_class = MessageSerializer
@@ -64,7 +64,7 @@ class MessageDetailView(RetrieveUpdateDestroyAPIView):
     serializer_class = MessageSerializer
 
 
-class ChatroomListView(ChatroomListHelperMixin, ListAPIView):
+class ChatroomListView(ChatroomListViewMixin, ListAPIView):
     model = Chatroom
     queryset = model.objects.all()
     serializer_class = ChatroomSerializer
@@ -79,7 +79,7 @@ class ChatroomDetailView(RetrieveUpdateDestroyAPIView):
     serializer_class = ChatroomSerializer
 
 
-class ChatroomTopicListView(ChatroomTopicHelperMixin, APIView):
+class ChatroomTopicListView(ChatroomTopicListViewMixin, APIView):
 
     def get(self, request, *args, **kwargs):
         return self.list_topics(request)
@@ -91,7 +91,7 @@ class ChatroomTopicListView(ChatroomTopicHelperMixin, APIView):
         return self.perform_add_or_remove_topic(request)
 
 
-class ChatroomMessageListView(ChatroomMessageHelperMixin, APIView):
+class ChatroomMessageListView(ChatroomMessageListViewMixin, APIView):
 
     def get(self, request, *args, **kwargs):
         return self.list_messages(request, *args, **kwargs)
@@ -100,7 +100,7 @@ class ChatroomMessageListView(ChatroomMessageHelperMixin, APIView):
         return self.send_message(request, *args, **kwargs)
 
 
-class ChatroomParticipantListView(ChatroomParticipantsHelperMixin, APIView):
+class ChatroomParticipantListView(ChatroomParticipantListViewMixin, APIView):
 
     def get(self, request, *args, **kwrags):
         return self.list_participants(request)
