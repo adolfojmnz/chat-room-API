@@ -26,6 +26,7 @@ from api.mixins.permissions import (
     ChatroomDetailPermissionsMixin,
     ChatroomMessageListPermissionsMixin,
     ChatroomAdminListPermissionsMixin,
+    ChatroomParticipantListPermissionsMixin,
 )
 
 
@@ -193,7 +194,7 @@ class ChatroomAdminListViewMixin(ChatroomAdminListPermissionsMixin, UserMixin, C
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class ChatroomParticipantListViewMixin(UserMixin, ChatroomMixin):
+class ChatroomParticipantListViewMixin(ChatroomParticipantListPermissionsMixin, UserMixin, ChatroomMixin):
 
     def get_queryset(self, queryset=None):
         return super().get_queryset(queryset)
