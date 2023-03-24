@@ -38,12 +38,23 @@ class UserPermissionsMixin:
         return super().get_permissions()
 
 
-class ChatroomPermissionsMixin(ChatroomMixin, UserMixin):
+class ChatroomListPermissionsMixin:
+
+    def get_permissions(self):
+        self.permission_classes = [IsChatroomAdmin]
+        if self.request.method in ['POST']:
+            self.permission_classes  = [IsAuthenticated]
+        elif self.request.method in SAFE_METHODS:
+            self.permission_classes = [IsAuthenticated]
+        return super().get_permissions()
+
+
+class ChatroomDetailPermissionsMixin(ChatroomMixin, UserMixin):
 
     def user_in_chatroom(self):
         user = self.request.user
         chatroom = self.get_chatroom_from_request(self.request)
-        if chatroom.participants.filter(user=user).exists():
+        if chatroom.participants.filter(pk=user.pk).exists():
             return True
         return False
 
@@ -53,9 +64,7 @@ class ChatroomPermissionsMixin(ChatroomMixin, UserMixin):
 
     def get_permissions(self):
         self.permission_classes = [IsChatroomAdmin]
-        if self.request.method in ['POST']:
-            self.permission_classes  = [IsAuthenticated]
-        elif self.request.method in SAFE_METHODS:
+        if self.request.method in SAFE_METHODS:
             if self.requested_chatroom_is_public():
                 self.permission_classes = [IsAuthenticated]
         elif self.request.method in DANGEROUS_METHODS:
