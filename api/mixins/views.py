@@ -25,6 +25,7 @@ from api.mixins.permissions import (
     ChatroomListPermissionsMixin,
     ChatroomDetailPermissionsMixin,
     ChatroomMessageListPermissionsMixin,
+    ChatroomAdminListPermissionsMixin,
 )
 
 
@@ -151,7 +152,7 @@ class ChatroomMessageListViewMixin(ChatroomMessageListPermissionsMixin, MessageM
         )
 
 
-class ChatroomAdminListViewMixin(UserMixin, ChatroomMixin):
+class ChatroomAdminListViewMixin(ChatroomAdminListPermissionsMixin, UserMixin, ChatroomMixin):
 
     def get_queryset(self, queryset=None):
         return super().get_queryset(queryset)
