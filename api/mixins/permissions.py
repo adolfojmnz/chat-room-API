@@ -5,8 +5,9 @@ from rest_framework.permissions import (
 )
 
 from api.mixins.views import (
-    ChatroomMixin,
     UserMixin,
+    MessageMixin,
+    ChatroomMixin,
 )
 
 SAFE_METHODS = ['GET', 'HEAD', 'OPTIONS']
@@ -34,6 +35,40 @@ class UserPermissionsMixin:
             self.permission_classes = [IsAuthenticated]
         elif self.request.method in DANGEROUS_METHODS:
             if self.request.user.pk == self.request.parser_context['kwargs'].get('pk'):
+                self.permission_classes = [IsAuthenticated]
+        return super().get_permissions()
+
+
+class MessageListPermissionsMixin:
+
+    def get_permissions(self):
+        self.permission_classes = [IsAdminUser]
+        return super().get_permissions()
+
+
+class MessageDetailPermissionsMixin(MessageMixin):
+
+    def user_sent_message(self, request):
+        user = request.user
+        message = self.get_message_from_request(request)
+        if message.sender.pk == user.pk:
+            return True
+        return False
+
+    def are_user_and_message_in_same_chatroom(self, request):
+        user = request.user
+        message = self.get_message_from_request(request)
+        if message.chatroom.participants.filter(pk=user.pk):
+            return True
+        return False
+
+    def get_permissions(self):
+        self.permission_classes = [IsAdminUser]
+        if self.request.method in SAFE_METHODS:
+            if self.are_user_and_message_in_same_chatroom(self.request):
+                self.permission_classes = [IsAuthenticated]
+        if self.request.method in DANGEROUS_METHODS:
+            if self.user_sent_message(self.request):
                 self.permission_classes = [IsAuthenticated]
         return super().get_permissions()
 

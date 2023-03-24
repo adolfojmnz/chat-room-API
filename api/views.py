@@ -26,6 +26,8 @@ from api.mixins.views import (
 )
 from api.mixins.permissions import (
     UserPermissionsMixin,
+    MessageListPermissionsMixin,
+    MessageDetailPermissionsMixin,
     ChatroomListPermissionsMixin,
     ChatroomDetailPermissionsMixin,
 )
@@ -55,13 +57,13 @@ class TopicDetailView(RetrieveUpdateDestroyAPIView):
     serializer_class = TopicSerializer
 
 
-class MessageListView(MessageListViewMixin, ListCreateAPIView):
+class MessageListView(MessageListPermissionsMixin, MessageListViewMixin, ListCreateAPIView):
     model = Message
     queryset = model.objects.all()
     serializer_class = MessageSerializer
 
 
-class MessageDetailView(RetrieveUpdateDestroyAPIView):
+class MessageDetailView(MessageDetailPermissionsMixin, RetrieveUpdateDestroyAPIView):
     model = Message
     queryset = model.objects.all()
     serializer_class = MessageSerializer
