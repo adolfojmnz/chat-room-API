@@ -115,3 +115,18 @@ class ChatroomDetailPermissionsMixin:
         elif self.request.method in DANGEROUS_METHODS:
             self.permission_classes = [IsChatroomAdmin]
         return super().get_permissions()
+
+
+class ChatroomMessageListPermissionsMixin:
+    """
+        The class that inherits this class, must as well inherit
+        MessageMixin and ChatroomMixin.
+    """
+
+    def get_permissions(self):
+        self.permission_classes = [IsChatroomAdmin]
+        chatroom = self.get_chatroom_from_request(self.request)
+        if self.request.method in SAFE_METHODS + ['POST']:
+            if chatroom.participants.filter(pk=self.request.user.pk).exists():
+                self.permission_classes = [IsAuthenticated]
+        return super().get_permissions()
