@@ -1,4 +1,4 @@
-from chatrooms.models import Chatroom
+from chatrooms.models import Chatroom, Topic
 
 
 class UserMixin:
@@ -35,6 +35,13 @@ class TopicMixin:
             self.queryset = self.queryset.filter(description__icontains=description)
 
         return self.queryset
+
+    def get_topic_from_request(self, request):
+        topic_id = request.parser_context['kwargs'].get('pk')
+        try:
+            return Topic.objects.get(pk=topic_id)
+        except Topic.DoesNotExist:
+            return None
 
 
 class MessageMixin:
