@@ -1,4 +1,14 @@
-from chatrooms.models import Chatroom, Topic
+from chatrooms.models import Message, Topic, Chatroom
+
+
+class GetModelObjectFromRequestMixin:
+
+    def get_model_object_from_request(self, model_instance, request):
+        object_id = request.parser_context['kwargs'].get('pk')
+        try:
+            return model_instance.objects.get(pk=object_id)
+        except model_instance.DoesNotExist:
+            return None
 
 
 class UserMixin:
@@ -22,7 +32,10 @@ class UserMixin:
         return self.queryset
 
 
-class TopicMixin:
+class TopicMixin(GetModelObjectFromRequestMixin):
+
+    def get_topic_from_request(self, request):
+        return self.get_model_object_from_request(Topic, request)
 
     def get_queryset(self, queryset=None):
         self.queryset = queryset if queryset is not None else self.queryset
@@ -36,15 +49,11 @@ class TopicMixin:
 
         return self.queryset
 
-    def get_topic_from_request(self, request):
-        topic_id = request.parser_context['kwargs'].get('pk')
-        try:
-            return Topic.objects.get(pk=topic_id)
-        except Topic.DoesNotExist:
-            return None
 
+class MessageMixin(GetModelObjectFromRequestMixin):
 
-class MessageMixin:
+    def get_message_from_request(self, request):
+        return self.get_model_object_from_request(Message, request)
 
     def get_queryset(self, queryset=None):
         self.queryset = queryset if queryset is not None else self.queryset
@@ -59,14 +68,10 @@ class MessageMixin:
         return self.queryset
 
 
-class ChatroomMixin:
+class ChatroomMixin(GetModelObjectFromRequestMixin):
 
     def get_chatroom_from_request(self, request):
-        chatroom_id = request.parser_context['kwargs'].get('pk')
-        try:
-            return Chatroom.objects.get(pk=chatroom_id)
-        except Chatroom.DoesNotExist:
-            return None
+        return self.get_model_object_from_request(Chatroom, request)
 
     def get_queryset(self):
         self.queryset = self.queryset.filter(public=True)
