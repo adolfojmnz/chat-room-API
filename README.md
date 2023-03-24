@@ -37,7 +37,7 @@ The project uses a PostgreSQL database. Configured as follows
 ```python
 DATABASES = {
     'default': {
-		'ENGINE': 'django.db.backends.postgresql',
+	'ENGINE': 'django.db.backends.postgresql',
         'NAME': env('DATABASE_NAME'),
         'HOST': env('DATABASE_HOST'),
         'PORT': env('DATABASE_PORT'),
