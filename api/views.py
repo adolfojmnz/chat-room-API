@@ -19,9 +19,10 @@ from api.mixins.views import (
     MessageListViewMixin,
     TopicListViewMixin,
     ChatroomListViewMixin,
-    ChatroomParticipantListViewMixin,
     ChatroomTopicListViewMixin,
     ChatroomMessageListViewMixin,
+    ChatroomParticipantListViewMixin,
+    ChatroomAdminListViewMixin,
 )
 from api.mixins.permissions import (
     UserPermissionsMixin,
@@ -100,6 +101,18 @@ class ChatroomMessageListView(ChatroomMessageListViewMixin, APIView):
 
     def post(self, request, *args, **kwargs):
         return self.send_message(request, *args, **kwargs)
+
+
+class ChatroomAdminListView(ChatroomAdminListViewMixin, APIView):
+
+    def get(self, request, *args, **kwrags):
+        return self.list_admins(request)
+
+    def post(self, request, *args, **kwrags):
+        return self.perform_add_or_delete_admin(request)
+
+    def delete(self, request, *args, **kwargs):
+        return self.perform_add_or_delete_admin(request)
 
 
 class ChatroomParticipantListView(ChatroomParticipantListViewMixin, APIView):

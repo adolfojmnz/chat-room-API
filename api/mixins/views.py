@@ -130,6 +130,47 @@ class ChatroomMessageListViewMixin(MessageMixin, ChatroomMixin):
         )
 
 
+class ChatroomAdminListViewMixin(UserMixin, ChatroomMixin):
+
+    def get_queryset(self, queryset=None):
+        return super().get_queryset(queryset)
+
+    def get_admin_from_request(self, request):
+        admin_id = request.data.get('id')
+        try:
+            return User.objects.get(pk=admin_id)
+        except User.DoesNotExist:
+            return None
+
+    def list_admins(self, request):
+        chatroom = self.get_chatroom_from_request(request)
+        if isinstance(chatroom, Chatroom):
+            serializer = UserSerializer(
+                self.get_queryset(queryset=chatroom.admins.all()),
+                many = True,
+            )
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({'Bad Request': 'Object not found!'}, status=status.HTTP_404_NOT_FOUND)
+
+    def perform_add_or_delete_admin(self, request):
+        chatroom = self.get_chatroom_from_request(request)
+        if not isinstance(chatroom, Chatroom):
+            return Response({'Bad Request': f'Chatroom not found!'}, status=status.HTTP_404_NOT_FOUND)
+        admin = self.get_admin_from_request(request)
+        if not isinstance(admin, User):
+            return Response({'Bad Request': f'User not found!'}, status=status.HTTP_404_NOT_FOUND)
+
+        if request.method == 'POST':
+            if not chatroom.participants.filter(pk=admin.pk).exists():
+                return Response({'Bad Request': f'User is not a chatroom participant!'}, status=status.HTTP_404_NOT_FOUND)
+            chatroom.admins.add(admin)
+        if request.method == 'DELETE':
+            chatroom.admins.remove(admin)
+
+        serializer = UserSerializer(chatroom.admins.all(), many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
 class ChatroomParticipantListViewMixin(UserMixin, ChatroomMixin):
 
     def get_queryset(self, queryset=None):
