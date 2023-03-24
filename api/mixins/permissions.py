@@ -5,7 +5,6 @@ from rest_framework.permissions import (
 )
 
 from api.mixins.views import (
-    UserMixin,
     MessageMixin,
     ChatroomMixin,
 )
@@ -25,13 +24,22 @@ class IsChatroomAdmin(BasePermission, ChatroomMixin):
         return bool(user_is_chatroom_admin or user_admin)
 
 
-class UserPermissionsMixin:
+class UserListPermissionsMixin:
 
     def get_permissions(self):
         self.permission_classes = [IsAdminUser]
-        if self.request.method in ['POST']:
+        if self.request.method in SAFE_METHODS:
+            self.permission_classes = [IsAuthenticated]
+        elif self.request.method in ['POST']:
             self.permission_classes = []
-        elif self.request.method in ['GET']:
+        return super().get_permissions()
+
+
+class UserDetailPermissionsMixin:
+
+    def get_permissions(self):
+        self.permission_classes = [IsAdminUser]
+        if self.request.method in ['GET']:
             self.permission_classes = [IsAuthenticated]
         elif self.request.method in DANGEROUS_METHODS:
             if self.request.user.pk == self.request.parser_context['kwargs'].get('pk'):
@@ -47,6 +55,7 @@ class MessageListPermissionsMixin:
 
 
 class MessageDetailPermissionsMixin(MessageMixin):
+    """ The class that inherits this class, must as well inherit MessageMixin """
 
     def user_sent_message(self, request):
         user = request.user
@@ -84,7 +93,8 @@ class ChatroomListPermissionsMixin:
         return super().get_permissions()
 
 
-class ChatroomDetailPermissionsMixin(ChatroomMixin, UserMixin):
+class ChatroomDetailPermissionsMixin:
+    """ The class that inherits this class, must as well inherit ChatroomMixin """
 
     def user_in_chatroom(self):
         user = self.request.user
