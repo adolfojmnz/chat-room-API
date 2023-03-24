@@ -17,12 +17,25 @@ from api.mixins.helpers import (
     MessageMixin,
     ChatroomMixin,
 )
+from api.mixins.permissions import (
+    UserListPermissionsMixin,
+    UserDetailPermissionsMixin,
+    MessageListPermissionsMixin,
+    MessageDetailPermissionsMixin,
+    ChatroomListPermissionsMixin,
+    ChatroomDetailPermissionsMixin,
+    ChatroomMessageListPermissionsMixin,
+)
 
 
-class UserListViewMixin(UserMixin):
+class UserListViewMixin(UserListPermissionsMixin, UserMixin):
 
     def get_queryset(self, queryset=None):
         return super().get_queryset(queryset)
+
+
+class UserDetailViewMixin(UserDetailPermissionsMixin):
+    pass
 
 
 class TopicListViewMixin(TopicMixin):
@@ -31,13 +44,17 @@ class TopicListViewMixin(TopicMixin):
         return super().get_queryset(queryset)
 
 
-class MessageListViewMixin(MessageMixin):
+class MessageListViewMixin(MessageListPermissionsMixin, MessageMixin):
 
     def get_queryset(self, queryset=None):
         return super().get_queryset(queryset)
 
 
-class ChatroomListViewMixin(ChatroomMixin):
+class MessageDetailViewMixin(MessageDetailPermissionsMixin):
+    pass
+
+
+class ChatroomListViewMixin(ChatroomListPermissionsMixin, ChatroomMixin):
 
     def get_queryset(self):
         return super().get_queryset()
@@ -66,6 +83,10 @@ class ChatroomListViewMixin(ChatroomMixin):
             return {'Location': str(data[api_settings.URL_FIELD_NAME])}
         except (TypeError, KeyError):
             return {}
+
+
+class ChatroomDetailViewMixin(ChatroomDetailPermissionsMixin, ChatroomMixin):
+    pass
 
 
 class ChatroomTopicListViewMixin(TopicMixin, ChatroomMixin):
@@ -104,7 +125,7 @@ class ChatroomTopicListViewMixin(TopicMixin, ChatroomMixin):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class ChatroomMessageListViewMixin(MessageMixin, ChatroomMixin):
+class ChatroomMessageListViewMixin(ChatroomMessageListPermissionsMixin, MessageMixin, ChatroomMixin):
 
     def list_messages(self, request, *args, **kwargs):
         chatroom = self.get_chatroom_from_request(request)
