@@ -49,6 +49,29 @@ class UserMixin:
         return serializers.UserSerializer(User.objects.all(), many=True)
 
 
+class TopicMixin(UserMixin):
+    topic_data = {
+        'name': 'topic_name',
+        'description': 'topic description',
+    }
+
+    def create_topic(self):
+        return self.client.post(
+            reverse('api:topics'),
+            data = self.topic_data,
+        )
+
+    def update_topic_data(self):
+        self.topic_data['name'] = 'new_topic_name'
+        self.topic_data['description'] = 'new topic description'
+
+    def get_single_topic_serializer(self):
+        return serializers.TopicSerializer(Topic.objects.get(name=self.topic_data['name']))
+
+    def get_list_topic_serializer(self):
+        return serializers.TopicSerializer(Topic.objects.all(), many=True)
+
+
 class ChatroomMixin(UserMixin):
     chatroom_data = {
         'name': 'test name',
