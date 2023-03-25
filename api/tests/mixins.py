@@ -2,10 +2,19 @@ from django.urls import reverse
 from django.test import Client
 
 from rest_framework import status
+from rest_framework.request import Request
+from rest_framework.test import APIRequestFactory
 
 from api import serializers
 from accounts.models import CustomUser as User
 from chatrooms.models import Chatroom, Message, Topic
+
+
+class APIRequestFactoryMixin:
+
+    def get_api_request(self):
+        self.factory = APIRequestFactory()
+        return Request(self.factory.get('/'))
 
 
 class UserMixin:
