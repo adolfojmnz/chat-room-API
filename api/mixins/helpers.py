@@ -14,7 +14,7 @@ class GetModelObjectFromRequestMixin:
 class UserMixin:
 
     def get_queryset(self, queryset=None):
-        self.queryset = queryset if queryset is not None else self.queryset
+        self.queryset = queryset if queryset is not None else super().get_queryset()
 
         username = self.request.query_params.get('username')
         if username is not None:
@@ -38,7 +38,7 @@ class TopicMixin(GetModelObjectFromRequestMixin):
         return self.get_model_object_from_request(Topic, request)
 
     def get_queryset(self, queryset=None):
-        self.queryset = queryset if queryset is not None else self.queryset
+        self.queryset = queryset if queryset is not None else super().get_queryset()
 
         name = self.request.query_params.get('name')
         if name is not None:
@@ -56,7 +56,7 @@ class MessageMixin(GetModelObjectFromRequestMixin):
         return self.get_model_object_from_request(Message, request)
 
     def get_queryset(self, queryset=None):
-        self.queryset = queryset if queryset is not None else self.queryset
+        self.queryset = queryset if queryset is not None else super().get_queryset()
 
         body = self.request.query_params.get('body')
         if body is not None:
