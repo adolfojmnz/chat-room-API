@@ -5,6 +5,7 @@ from rest_framework import status
 
 from api import serializers
 from accounts.models import CustomUser as User
+from chatrooms.models import Chatroom, Message, Topic
 
 
 class UserMixin:
@@ -46,3 +47,41 @@ class UserMixin:
 
     def get_list_user_serializer(self):
         return serializers.UserSerializer(User.objects.all(), many=True)
+
+
+class ChatroomMixin(UserMixin):
+    chatroom_data = {
+        'name': 'test name',
+        'description': 'test description',
+        'creation_date': '2023-03-16',
+        'public': True,
+        'min_age_required': 13,
+    }
+
+    def update_chatroom_data(self):
+        self.chatroom_data['name'] = 'new test name'
+        self.chatroom_data['description'] = 'new test description'
+        self.chatroom_data['creation_date'] = '2023-02-16'
+        self.chatroom_data['public'] = False
+        self.chatroom_data['min_age_required'] = 18
+
+    def create_chatroom(self):
+        return self.client.post(
+            reverse('api:chatrooms'),
+            self.chatroom_data,
+        )
+
+    def get_single_chatroom_serialized(self):
+        return serializers.ChatroomSerializer(
+            Chatroom.objects.get(
+                name=self.chatroom_data.get('name'),
+            ),
+            context = {'request': self.request}
+        )
+
+    def get_list_chatroom_serialized(self):
+        return serializers.ChatroomSerializer(
+            Chatroom.objects.all(),
+            many = True,
+            context = {'request': self.request}
+        )
