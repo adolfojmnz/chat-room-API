@@ -31,6 +31,13 @@ class UserMixin:
     def create_user(self):
         return self.client.post(reverse('api:users'), self.user_data)
 
+    def create_admin_user(self):
+        response = self.create_user()
+        user = User.objects.get(pk=response.data.get('id'))
+        user.is_staff = True
+        user.save()
+        return response
+
     def update_user_data(self):
         self.user_data['username'] = 'new_username'
         self.user_data['first_name'] = 'new_first_name'
