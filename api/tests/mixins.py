@@ -22,7 +22,7 @@ class UserMixin:
     def create_user(self):
         return self.client.post(reverse('api:users'), self.user_data)
 
-    def update_user_date(self) -> None:
+    def update_user_data(self):
         self.user_data['username'] = 'new_username'
         self.user_data['first_name'] = 'new_first_name'
         self.user_data['last_name'] = 'new_last_name'
@@ -49,7 +49,7 @@ class UserMixin:
         return serializers.UserSerializer(User.objects.all(), many=True)
 
 
-class TopicMixin(UserMixin):
+class TopicMixin:
     topic_data = {
         'name': 'topic_name',
         'description': 'topic description',
@@ -72,7 +72,38 @@ class TopicMixin(UserMixin):
         return serializers.TopicSerializer(Topic.objects.all(), many=True)
 
 
-class ChatroomMixin(UserMixin):
+class MessageMixin:
+
+    def create_message(self):
+        self.message_data = {
+            'chatroom_id': self.chatroom.data.get('id'),
+            'sender_id': self.user.data.get('id'),
+            'body': 'message body',
+        }
+        return self.client.post(
+            reverse('api:messages'),
+            data = self.message_data,
+        )
+
+    def update_message_data(self):
+        self.message_data['body'] = 'new message body'
+
+    def get_single_message_serializer(self):
+        message_id = self.chatroom.data.get('id')
+        return serializers.MessageSerializer(
+            Message.objects.get(pk=message_id),
+            context = {'request': self.request},
+        )
+
+    def get_list_message_serializer(self):
+        return serializers.MessageSerializer(
+            Message.objects.all(),
+            many = True,
+            context = {'request': self.request},
+        )
+
+
+class ChatroomMixin:
     chatroom_data = {
         'name': 'test name',
         'description': 'test description',
