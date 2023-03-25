@@ -54,9 +54,9 @@ class UserMixin:
             return response.data.get('access')
         return None
 
-    def build_client_with_authorization_headers(self):
+    def get_client_with_authorization_headers(self):
         self.token = self.get_access_token()
-        self.client = Client(HTTP_AUTHORIZATION=f'JWT {self.token}')
+        return Client(HTTP_AUTHORIZATION=f'JWT {self.token}')
 
     def get_single_user_serializer(self):
         return serializers.UserSerializer(User.objects.get(username=self.user_data.get('username')))
