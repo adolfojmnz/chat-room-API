@@ -159,3 +159,22 @@ class ChatroomMixin:
             many = True,
             context = {'request': self.request}
         )
+
+
+class ChatroomMessageMixin:
+
+    def create_chatroom_message(self):
+        return self.client.post(
+            reverse(
+                'api:chatroom-messages',
+                kwargs={'pk': self.chatroom.pk},
+            ),
+            data = {'body': 'Message body'}
+        )
+
+    def get_chatroom_message_list_serializer(self):
+        return serializers.MessageSerializer(
+            Message.objects.all(),
+            many = True,
+            context = {'request': self.request}
+        )
