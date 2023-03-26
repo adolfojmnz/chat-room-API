@@ -105,7 +105,7 @@ class MessageMixin:
         self.message_data['body'] = 'new message body'
 
     def get_single_message_serializer(self):
-        message_id = self.chatroom.data.get('id')
+        message_id = self.message.data.get('id')
         return serializers.MessageSerializer(
             Message.objects.get(pk=message_id),
             context = {'request': self.request},
