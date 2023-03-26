@@ -28,11 +28,14 @@ class UserMixin:
         'password': 'test_password',
     }
 
-    def create_user(self):
-        return self.client.post(reverse('api:users'), self.user_data)
+    def create_user(self, user_data=None):
+        user_data = user_data if user_data is not None else self.user_data
+        return self.client.post(reverse('api:users'), user_data)
 
-    def create_admin_user(self):
-        response = self.create_user()
+    def create_superuser(self):
+        user_data = self.user_data.copy()
+        user_data['username'] = 'superuser_username'
+        response = self.create_user(user_data)
         user = User.objects.get(pk=response.data.get('id'))
         user.is_staff = True
         user.save()
@@ -47,15 +50,16 @@ class UserMixin:
         self.user_data['birtdate'] = '1999-09-29'
         self.user_data['password'] = 'new_password'
 
-    def get_access_token(self):
-        data = {'username': self.user_data['username'], 'password': self.user_data['password']}
+    def get_access_token(self, superuser=False):
+        username = self.user_data['username'] if superuser is False else 'superuser_username'
+        data = {'username': username, 'password': self.user_data['password']}
         response = self.client.post(reverse('token_obtain_pair'), data=data)
         if response.status_code == status.HTTP_200_OK:
             return response.data.get('access')
         return None
 
-    def get_client_with_authorization_headers(self):
-        self.token = self.get_access_token()
+    def get_client_with_authorization_headers(self, superuser=False):
+        self.token = self.get_access_token(superuser)
         return Client(HTTP_AUTHORIZATION=f'JWT {self.token}')
 
     def get_single_user_serializer(self):
