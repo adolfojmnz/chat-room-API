@@ -1,4 +1,4 @@
-from chatrooms.models import Message, Topic, Chatroom
+from chatrooms.models import Message, Chatroom
 
 
 class GetModelObjectFromRequestMixin:
@@ -28,24 +28,6 @@ class UserMixin:
         email = self.request.query_params.get('email')
         if email is not None:
             self.queryset = self.queryset.filter(email__icontains=email)
-
-        return self.queryset
-
-
-class TopicMixin(GetModelObjectFromRequestMixin):
-
-    def get_topic_from_request(self, request):
-        return self.get_model_object_from_request(Topic, request)
-
-    def get_queryset(self, queryset=None):
-        self.queryset = queryset if queryset is not None else super().get_queryset()
-
-        name = self.request.query_params.get('name')
-        if name is not None:
-            self.queryset =  self.queryset.filter(name__icontains=name)
-        description = self.request.query_params.get('description')
-        if description is not None:
-            self.queryset = self.queryset.filter(description__icontains=description)
 
         return self.queryset
 

@@ -7,7 +7,7 @@ from rest_framework.test import APIRequestFactory
 
 from api import serializers
 from accounts.models import CustomUser as User
-from chatrooms.models import Chatroom, Message, Topic
+from chatrooms.models import Chatroom, Message
 
 
 class APIRequestFactoryMixin:
@@ -67,29 +67,6 @@ class UserMixin:
 
     def get_list_user_serializer(self):
         return serializers.UserSerializer(User.objects.all(), many=True)
-
-
-class TopicMixin:
-    topic_data = {
-        'name': 'topic_name',
-        'description': 'topic description',
-    }
-
-    def create_topic(self):
-        return self.client.post(
-            reverse('api:topics'),
-            data = self.topic_data,
-        )
-
-    def update_topic_data(self):
-        self.topic_data['name'] = 'new_topic_name'
-        self.topic_data['description'] = 'new topic description'
-
-    def get_single_topic_serializer(self):
-        return serializers.TopicSerializer(Topic.objects.get(name=self.topic_data['name']))
-
-    def get_list_topic_serializer(self):
-        return serializers.TopicSerializer(Topic.objects.all(), many=True)
 
 
 class MessageMixin:
@@ -158,15 +135,6 @@ class ChatroomMixin:
             Chatroom.objects.all(),
             many = True,
             context = {'request': self.request}
-        )
-
-
-class ChatroomTopicMixin:
-
-    def get_list_chatroom_topic_serializer(self):
-        return serializers.TopicSerializer(
-            self.chatroom.topics.all(),
-            many = True,
         )
 
 

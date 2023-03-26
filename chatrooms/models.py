@@ -10,7 +10,6 @@ class Chatroom(models.Model):
     creation_date = models.DateField(auto_now=True)
     public = models.BooleanField(default=True)
     min_age_required = models.IntegerField(default=13)
-    topics = models.ManyToManyField('chatrooms.Topic', related_name='chatrooms')
     participants = models.ManyToManyField(User, related_name='chatrooms')
     admins = models.ManyToManyField(User, related_name='admin_of_chatrooms')
 
@@ -26,11 +25,3 @@ class Message(models.Model):
 
     def __str__(self):
         return f'{self.sender.username}: {self.body[:100]}'
-
-
-class Topic(models.Model):
-    name = models.CharField(max_length=64, unique=True)
-    description = models.CharField(max_length=255)
-
-    def __str__(self) -> str:
-        return self.name

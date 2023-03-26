@@ -6,11 +6,10 @@ from rest_framework.generics import (
 )
 
 from accounts.models import CustomUser as User
-from chatrooms.models import Chatroom, Topic, Message
+from chatrooms.models import Chatroom, Message
 
 from api.serializers import (
     UserSerializer,
-    TopicSerializer,
     MessageSerializer,
     ChatroomSerializer,
 )
@@ -19,10 +18,8 @@ from api.mixins.views import (
     UserDetailViewMixin,
     MessageListViewMixin,
     MessageDetailViewMixin,
-    TopicListViewMixin,
     ChatroomListViewMixin,
     ChatroomDetailViewMixin,
-    ChatroomTopicListViewMixin,
     ChatroomMessageListViewMixin,
     ChatroomParticipantListViewMixin,
     ChatroomAdminListViewMixin,
@@ -39,18 +36,6 @@ class UserDetailView(UserDetailViewMixin, RetrieveUpdateDestroyAPIView):
     model = User
     queryset = model.objects.all()
     serializer_class = UserSerializer
-
-
-class TopicListView(TopicListViewMixin, ListCreateAPIView):
-    model = Topic
-    queryset = model.objects.all()
-    serializer_class = TopicSerializer
-
-
-class TopicDetailView(RetrieveUpdateDestroyAPIView):
-    model = Topic
-    queryset = model.objects.all()
-    serializer_class = TopicSerializer
 
 
 class MessageListView(MessageListViewMixin, ListCreateAPIView):
@@ -78,18 +63,6 @@ class ChatroomDetailView(ChatroomDetailViewMixin, RetrieveUpdateDestroyAPIView):
     model = Chatroom
     queryset = model.objects.all()
     serializer_class = ChatroomSerializer
-
-
-class ChatroomTopicListView(ChatroomTopicListViewMixin, APIView):
-
-    def get(self, request, *args, **kwargs):
-        return self.list_topics(request)
-
-    def post(self, request, *args, **kwargs):
-        return self.perform_add_or_remove_topic(request)
-
-    def delete(self, request, *args, **kwargs):
-        return self.perform_add_or_remove_topic(request)
 
 
 class ChatroomMessageListView(ChatroomMessageListViewMixin, APIView):

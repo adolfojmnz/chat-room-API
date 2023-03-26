@@ -2,7 +2,7 @@ from django.contrib.auth.hashers import make_password
 from rest_framework import serializers
 
 from accounts.models import CustomUser as User
-from chatrooms.models import Chatroom, Topic, Message
+from chatrooms.models import Chatroom, Message
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -22,13 +22,6 @@ class UserSerializer(serializers.ModelSerializer):
         if self.validated_data.get('password') is not None:
             self.validated_data['password'] = make_password(self.validated_data['password'])
         return super().save(**kwargs)
-
-
-class TopicSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Topic
-        fields = ['id', 'name', 'description']
 
 
 class MessageSerializer(serializers.ModelSerializer):
@@ -84,4 +77,3 @@ class ChatroomMessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
         fields = ['id', 'chatroom', 'sender', 'body']
-
