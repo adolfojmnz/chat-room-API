@@ -141,7 +141,7 @@ class ChatroomMixin:
             self.chatroom_data,
         )
 
-    def get_single_chatroom_serialized(self):
+    def get_single_chatroom_serializer(self):
         return serializers.ChatroomSerializer(
             Chatroom.objects.get(
                 name=self.chatroom_data.get('name'),
@@ -149,7 +149,7 @@ class ChatroomMixin:
             context = {'request': self.request}
         )
 
-    def get_list_chatroom_serialized(self):
+    def get_list_chatroom_serializer(self):
         return serializers.ChatroomSerializer(
             Chatroom.objects.all(),
             many = True,
