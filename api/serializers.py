@@ -79,8 +79,9 @@ class ChatroomSerializer(serializers.ModelSerializer):
         read_only = ['creation_date']
 
 
-class ChatroomMessageSerialzier(serializers.ModelSerializer):
+class ChatroomMessageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Message
         fields = ['id', 'chatroom', 'sender', 'body']
+

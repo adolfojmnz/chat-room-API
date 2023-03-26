@@ -9,7 +9,7 @@ from api.serializers import (
     UserSerializer,
     TopicSerializer,
     MessageSerializer,
-    ChatroomMessageSerialzier,
+    ChatroomMessageSerializer,
 )
 from api.mixins.helpers import (
     UserMixin,
@@ -70,6 +70,7 @@ class ChatroomListViewMixin(ChatroomListPermissionsMixin, ChatroomMixin):
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         self.add_admin(request, serializer)
+        self.add_participant(request, serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
@@ -79,6 +80,10 @@ class ChatroomListViewMixin(ChatroomListPermissionsMixin, ChatroomMixin):
     def add_admin(self, request, serializer):
         admin = request.user
         Chatroom.objects.get(name=serializer.validated_data['name']).admins.add(admin)
+
+    def add_participant(self, request, serializer):
+        participant = request.user
+        Chatroom.objects.get(name=serializer.validated_data['name']).participants.add(participant)
 
     def get_success_headers(self, data):
         try:
@@ -139,7 +144,7 @@ class ChatroomMessageListViewMixin(ChatroomMessageListPermissionsMixin, MessageM
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def send_message(self, request, *args, **kwargs):
-        serializer = ChatroomMessageSerialzier(data=request.data)
+        serializer = ChatroomMessageSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         chatroom = self.get_chatroom_from_request(request)
         if isinstance(chatroom, Chatroom):
@@ -147,10 +152,7 @@ class ChatroomMessageListViewMixin(ChatroomMessageListPermissionsMixin, MessageM
         if isinstance(request.user, User):
             serializer.validated_data['sender'] = request.user
         serializer.save()
-        return Response(
-            ChatroomMessageSerialzier(chatroom.messages.all(), many=True).data,
-            status=status.HTTP_201_CREATED,
-        )
+        return self.list_messages(request, *args, **kwargs)
 
 
 class ChatroomAdminListViewMixin(ChatroomAdminListPermissionsMixin, UserMixin, ChatroomMixin):
