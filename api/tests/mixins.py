@@ -161,6 +161,15 @@ class ChatroomMixin:
         )
 
 
+class ChatroomTopicMixin:
+
+    def get_list_chatroom_topic_serializer(self):
+        return serializers.TopicSerializer(
+            self.chatroom.topics.all(),
+            many = True,
+        )
+
+
 class ChatroomMessageMixin:
 
     def create_chatroom_message(self):
