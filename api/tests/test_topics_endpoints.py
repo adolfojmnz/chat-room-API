@@ -10,6 +10,8 @@ from chatrooms.models import Topic
 class SetUpMixin(TopicMixin, UserMixin):
 
     def setUp(self) -> None:
+        self.create_user()
+        self.client = self.get_client_with_authorization_headers()
         return super().setUp()
 
 
@@ -17,8 +19,6 @@ class TestTopicListEndpoint(SetUpMixin, TestCase):
 
     def setUp(self) -> None:
         self.url = reverse('api:topics')
-        self.create_user()
-        self.client = self.get_client_with_authorization_headers()
         return super().setUp()
 
     def test_get(self):
@@ -39,12 +39,10 @@ class TestTopicListEndpoint(SetUpMixin, TestCase):
 class TestTopicDetailEndpoint(SetUpMixin, TestCase):
 
     def setUp(self) -> None:
-        self.create_user()
-        self.get_client_with_authorization_headers()
-        self.topic = self.create_topic()
+        self.topic_response = self.create_topic()
         self.url = reverse(
             'api:topic-detail',
-            kwargs = {'pk': self.topic.data.get('id')},
+            kwargs = {'pk': self.topic_response.data.get('id')},
         )
         return super().setUp()
 
