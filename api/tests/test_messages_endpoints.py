@@ -16,8 +16,8 @@ class SetUpMixin(MessageMixin, ChatroomMixin, UserMixin, APIRequestFactoryMixin)
 
     def setUp(self) -> None:
         self.request = self.get_api_request()
-        self.user = self.create_admin_user()
-        self.client = self.get_client_with_authorization_headers()
+        self.user = self.create_superuser()
+        self.client = self.get_client_with_authorization_headers(superuser=True)
         self.last_setup()
         return super().setUp()
 
@@ -90,4 +90,3 @@ class TestMessageDetailEndpoint(SetUpMixin, TestCase):
         response = self.client.delete(self.url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(Message.objects.filter(pk=self.message_data.get('id')))
-
