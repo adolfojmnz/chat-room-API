@@ -121,6 +121,44 @@ python manage.py migrate
 ```
 <br>
 
+# Tests
+
+I have created a total of 29 tests, that test the apps `api`, `chatrooms`, and `accounts`.
+<br>
+
+### Run the tests
+```bash
+python manage.py test
+```
+
+It should return an output such as
+
+```bash
+Found 29 test(s).
+Creating test database for alias 'default'...
+System check identified no issues (0 silenced).
+.............................
+----------------------------------------------------------------------
+Ran 29 tests in 10.742s
+
+OK
+Destroying test database for alias 'default'...
+```
+<br>
+
+### Tests in api app
+A total of 26 tests included. Each of the functionalities of the API endpoints are tested.
+The requests made in the tests to the API endpoints are token-based authenticated requests.
+<br>
+
+### Tests in the chatrooms app
+The tests in the chatrooms app perform CRUD operations in the models Chatroom and Message.
+<br>
+
+### Tests in the accounts app
+The test in the account app permom CRUD operations in the model CustomUser.
+<br> <br>
+
 # API Endpoints
 
 The project consists of a total of eleven (11) endpoints, such endpoints provide functionalities for users, chatrooms, messages and more.
