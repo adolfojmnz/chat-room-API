@@ -147,7 +147,7 @@ Destroying test database for alias 'default'...
 <br>
 
 ### Tests in api app
-A total of 26 tests included. Each of the functionalities of the API endpoints are tested.
+A total of 26 tests were included. Each functionality of the endpoints in the API is tested.
 The requests made in the tests to the API endpoints are token-based authenticated requests.
 <br>
 
@@ -156,9 +156,8 @@ The tests in the chatrooms app perform CRUD operations in the models Chatroom an
 <br>
 
 ### Tests in the accounts app
-The test in the account app permom CRUD operations in the model CustomUser.
+The test in the account app performs CRUD operations in the model CustomUser.
 <br> <br>
-
 # API Endpoints
 
 The project consists of a total of eleven (11) endpoints, such endpoints provide functionalities for users, chatrooms, messages and more.
