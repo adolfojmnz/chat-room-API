@@ -131,14 +131,12 @@ The project consists of a total of eleven (11) endpoints, such endpoints provide
 | --- | --- |
 | api/users | GET, POST |
 | api/users/{userId} | PATCH, PUT, DELETE |
-| api/topics | GET, POST |
-| api/topics/{topicId} | PATCH, PUT, DELETE |
 | api/messages | GET, POST |
 | api/messages/{messageId} | PATCH, PUT, DELETE |
 | api/chatrooms | GET, POST |
 | api/chatrooms/{chatroomId} | PATCH, PUT, DELETE |
-| api/chatrooms/{chatroomId}/topics | GET, POST, DELETE |
 | api/chatrooms/{chatroomId}/messages | GET, POST |
+| api/chatrooms/{chatroomId}/Admins | GET, POST, DELETE |
 | api/chatrooms/{chatroomId}/participants | GET, POST, DELETE |
 
 ### api/users
@@ -156,22 +154,6 @@ The project consists of a total of eleven (11) endpoints, such endpoints provide
 | PATCH | Any field | Partially updates the user data | 200 |
 | PUT | All fields | Updates the user data | 200 |
 | DELETE |  | Deletes the user | 204 |
-
-### api/topics
-
-| HTTP METHOD | REQUIRED DATA | ACTION | STATUS CODE |
-| --- | --- | --- | --- |
-| GET |  | Retrieves the list of topics | 200 |
-| POST | name | Creates a topic | 201 |
-
-### api/topics/{topicId}
-
-| HTTP METHOD | REQUIRED DATA | ACTION | STATUS CODE |
-| --- | --- | --- | --- |
-| GET |  | Retrieves the details of the topic | 200 |
-| PATCH | Any field | Partially updates the topic data | 200 |
-| PUT | All fields | Updates the topic data | 200 |
-| DELETE |  | Deletes the topic | 204 |
 
 ### api/messages
 
@@ -205,14 +187,6 @@ The project consists of a total of eleven (11) endpoints, such endpoints provide
 | PUT | All fields | Updates the chatroom data | 200 |
 | DELETE |  | Deletes the chatroom | 204 |
 
-### api/chatrooms/{chatroomId}/topics
-
-| HTTP METHOD | REQUIRED DATA | ACTION | STATUS CODE |
-| --- | --- | --- | --- |
-| GET |  | Retrieves the list of topics associated with the chatroom | 200 |
-| POST | topic_id | Adds the topic to the chatroom | 200 |
-| DELETE | topic_id | Removes the topic from the chatroom | 200 |
-
 ### api/chatrooms/{chatroomId}/messages
 
 | HTTP METHOD | REQUIRED DATA | ACTION | STATUS CODE |
@@ -224,10 +198,18 @@ The project consists of a total of eleven (11) endpoints, such endpoints provide
     💡 The <em><strong>DELETE</strong></em> method can be call on the message object by using the <em><strong>api/messages/{messageId}</strong></em> endpoint.
 </aside>
 
+### api/chatrooms/{chatroomId}/admins
+
+| HTTP METHOD | REQUIRED DATA | ACTION | STATUS CODE |
+| --- | --- | --- | --- |
+| GET |  | Retrieves the list of admins associated with the chatroom | 200 |
+| POST | id | Adds the admins to the chatroom | 200 |
+| DELETE | id | Removes the admins from the chatroom | 200 |
+
 ### api/chatrooms/{chatroomId}/participants
 
 | HTTP METHOD | REQUIRED DATA | ACTION | STATUS CODE |
 | --- | --- | --- | --- |
 | GET |  | Retrieves the list of participants associated with the chatroom | 200 |
-| POST | participant_id | Adds the participant to the chatroom | 200 |
-| DELETE | participant_id | Removes the participant from the chatroom | 200 |
+| POST | id | Adds the participant to the chatroom | 200 |
+| DELETE | id | Removes the participant from the chatroom | 200 |
