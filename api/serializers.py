@@ -1,7 +1,7 @@
 from django.contrib.auth.hashers import make_password
 from rest_framework import serializers
 
-from accounts.models import CustomUser as User
+from accounts.models import CustomUser as User, ContactBook
 from chatrooms.models import Chatroom, Message
 
 
@@ -24,14 +24,31 @@ class UserSerializer(serializers.ModelSerializer):
         return super().save(**kwargs)
 
 
+class ContactBookSerializer(serializers.ModelSerializer):
+    contacts = serializers.HyperlinkedRelatedField(
+        many = True,
+        read_only = True,
+        view_name = 'api:user-detail',
+    )
+    book_owner = serializers.HyperlinkedRelatedField(
+        read_only = True,
+        view_name = 'api:user-detail',
+    )
+    book_owner_id = serializers.IntegerField(write_only=True)
+
+    class Meta:
+        model = ContactBook
+        fields = ['id', 'book_owner', 'book_owner_id', 'contacts']
+
+
 class MessageSerializer(serializers.ModelSerializer):
     chatroom = serializers.HyperlinkedRelatedField(
-        view_name = 'api:chatroom-detail',
         read_only = True,
+        view_name = 'api:chatroom-detail',
     )
     sender = serializers.HyperlinkedRelatedField(
-        view_name = 'api:user-detail',
         read_only = True,
+        view_name = 'api:user-detail',
     )
     chatroom_id = serializers.IntegerField(write_only=True)
     sender_id = serializers.IntegerField(write_only=True)
