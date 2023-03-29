@@ -1,7 +1,7 @@
 from django.contrib.auth.hashers import make_password
 from rest_framework import serializers
 
-from accounts.models import CustomUser as User, ContactBook
+from accounts.models import CustomUser as User
 from chatrooms.models import Chatroom, Message
 
 
@@ -22,23 +22,6 @@ class UserSerializer(serializers.ModelSerializer):
         if self.validated_data.get('password') is not None:
             self.validated_data['password'] = make_password(self.validated_data['password'])
         return super().save(**kwargs)
-
-
-class ContactBookSerializer(serializers.ModelSerializer):
-    contacts = serializers.HyperlinkedRelatedField(
-        many = True,
-        read_only = True,
-        view_name = 'api:user-detail',
-    )
-    book_owner = serializers.HyperlinkedRelatedField(
-        read_only = True,
-        view_name = 'api:user-detail',
-    )
-    book_owner_id = serializers.IntegerField(write_only=True)
-
-    class Meta:
-        model = ContactBook
-        fields = ['id', 'book_owner', 'book_owner_id', 'contacts']
 
 
 class MessageSerializer(serializers.ModelSerializer):
