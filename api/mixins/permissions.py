@@ -53,7 +53,7 @@ class UserFriendListPermissionsMixin:
         self.permission_classes = [IsAdminUser]
         if self.request.method in SAFE_METHODS:
             self.permission_classes = [IsAuthenticated]
-        elif self.request.method in DANGEROUS_METHODS:
+        elif self.request.method in DANGEROUS_METHODS + ['POST']:
             if self.request.user.pk == self.request.parser_context['kwargs'].get('pk'):
                 self.permission_classes = [IsAuthenticated]
         return super().get_permissions()
