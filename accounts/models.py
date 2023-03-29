@@ -13,6 +13,11 @@ class CustomUser(AbstractUser):
     # custom fields
     birthdate = models.DateField(auto_now=True)
     bio = models.CharField(default='', max_length=1000)
+    friends = models.ManyToManyField('accounts.CustomUser')
+
+    def clean_friends(self):
+        """ This method removes a CustomUser instance from its friend list """
+        self.friends.remove(self.pk)
 
     def __str__(self):
         return self.username
