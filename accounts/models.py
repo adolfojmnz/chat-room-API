@@ -1,5 +1,4 @@
 from django.db import models
-from django.utils import timezone
 from django.contrib.auth.models import AbstractUser
 
 
@@ -17,11 +16,3 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.username
-
-
-class ContactBook(models.Model):
-    book_owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='contact_book')
-    contacts = models.ManyToManyField(CustomUser, related_name='contacts')
-
-    def __str__(self):
-        return f'{self.book_owner} contact book'
