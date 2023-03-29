@@ -7,6 +7,7 @@ app_name = 'api'
 urlpatterns = [
     path('users', views.UserListView.as_view(), name='users'),
     path('users/<int:pk>', views.UserDetailView.as_view(), name='user-detail'),
+    path('users/<int:pk>/friends', views.UserFriendListView.as_view(), name='user-friends'),
 
     path('messages', views.MessageListView.as_view(), name='messages'),
     path('messages/<int:pk>', views.MessageDetailView.as_view(), name='message-detail'),

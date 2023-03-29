@@ -69,6 +69,28 @@ class UserMixin:
         return serializers.UserSerializer(User.objects.all(), many=True)
 
 
+class UserFriendListMixin:
+    user_list_data = [
+        {'username': 'user01', 'password': 'pass01', 'email': 'email01@localhost.com', 'bio': 'bio01'},
+        {'username': 'user02', 'password': 'pass02', 'email': 'email02@localhost.com', 'bio': 'bio02'},
+        {'username': 'user03', 'password': 'pass03', 'email': 'email03@localhost.com', 'bio': 'bio03'},
+        {'username': 'user04', 'password': 'pass04', 'email': 'email04@localhost.com', 'bio': 'bio04'},
+    ]
+
+    def create_user_list(self):
+        response_list = []
+        for user_data in self.user_list_data:
+            response_list.append(self.client.post(reverse('api:users'), user_data))
+        return all(response_list)
+
+    def get_friend_list_serializer(self):
+        serializer = serializers.UserSerializer(
+            self.user.friends.all(),
+            many = True,
+        )
+        return serializer
+
+
 class MessageMixin:
 
     def create_message(self):

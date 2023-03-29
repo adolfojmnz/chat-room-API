@@ -16,6 +16,7 @@ from api.serializers import (
 from api.mixins.views import (
     UserListViewMixin,
     UserDetailViewMixin,
+    UserFriendListMixin,
     MessageListViewMixin,
     MessageDetailViewMixin,
     ChatroomListViewMixin,
@@ -36,6 +37,18 @@ class UserDetailView(UserDetailViewMixin, RetrieveUpdateDestroyAPIView):
     model = User
     queryset = model.objects.all()
     serializer_class = UserSerializer
+
+
+class UserFriendListView(UserFriendListMixin, APIView):
+
+    def get(self, request, *args, **kwargs):
+        return self.list_friends(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return self.perform_add_or_delete_friend(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        return self.perform_add_or_delete_friend(request, *args, **kwargs)
 
 
 class MessageListView(MessageListViewMixin, ListCreateAPIView):

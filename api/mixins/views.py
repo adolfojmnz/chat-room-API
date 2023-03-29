@@ -18,6 +18,7 @@ from api.mixins.helpers import (
 from api.mixins.permissions import (
     UserListPermissionsMixin,
     UserDetailPermissionsMixin,
+    UserFriendListPermissionsMixin,
     MessageListPermissionsMixin,
     MessageDetailPermissionsMixin,
     ChatroomListPermissionsMixin,
@@ -36,6 +37,38 @@ class UserListViewMixin(UserListPermissionsMixin, UserMixin):
 
 class UserDetailViewMixin(UserDetailPermissionsMixin):
     pass
+
+
+class UserFriendListMixin(UserFriendListPermissionsMixin, UserMixin):
+
+    def get_queryset(self, queryset=None):
+        return super().get_queryset(queryset)
+
+    def get_model_obj(self, pk, model):
+        try:
+            return model.objects.get(pk=pk)
+        except model.DoesNotExist:
+            return None
+
+    def list_friends(self, request, *args, **kwargs):
+        user = request.user
+        serializer = UserSerializer(
+            self.get_queryset(user.friends.all()),
+            many = True,
+        )
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def perform_add_or_delete_friend(self, request, *args, **kwargs):
+        user = request.user
+        friend = self.get_model_obj(request.data.get('id'), User)
+        if friend is None:
+            return Response({'not found': f'user not found'}, status=status.HTTP_404_NOT_FOUND)
+        if request.method == 'POST':
+            user.friends.add(friend.pk)
+            user.clean_friends()
+        elif request.method == 'DELETE':
+            user.friends.remove(friend.pk)
+        return self.list_friends(request, *args, **kwargs)
 
 
 class MessageListViewMixin(MessageListPermissionsMixin, MessageMixin):
