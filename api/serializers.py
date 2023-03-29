@@ -47,11 +47,6 @@ class MessageSerializer(serializers.ModelSerializer):
 
 
 class ChatroomSerializer(serializers.ModelSerializer):
-    topics = serializers.HyperlinkedRelatedField(
-        many = True,
-        read_only = True,
-        view_name = 'api:topic-detail',
-    )
     participants = serializers.HyperlinkedRelatedField(
         many = True,
         read_only = True,
@@ -67,7 +62,7 @@ class ChatroomSerializer(serializers.ModelSerializer):
         model = Chatroom
         fields = [
             'id', 'name', 'description', 'creation_date', 'public',
-            'min_age_required', 'topics', 'participants', 'admins',
+            'min_age_required', 'participants', 'admins',
         ]
         read_only = ['creation_date']
 
