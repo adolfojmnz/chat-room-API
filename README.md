@@ -1,6 +1,6 @@
 # Description
 
-The `chat-room-api` is an API devloped with `Django` and `Django Rest Framework` in addition to other libraries and tools. The idea of this project is to serve as a back-end for a Chat Room (front-end web application) with similarities to ***[Discord](https://discord.com/)*** or similar platforms, in which registered users can join existing chat rooms or create their own and chat with peers. The `chat-room-API` allows for chat rooms, users and messages to be filtered or searched by query params. Token-based autheticated request ara available and are mandatory to ensure teh correct permissions and authorization for users based on their roles.
+The `chat-room-api` is an API developed with `Django` and `Django Rest Framework` in addition to other libraries and tools. The idea of this project is to serve as a back-end for a Chat Room (front-end web application) with similarities to ***[Discord](https://discord.com/)*** or similar platforms, in which registered users can join existing chat rooms or create their own and chat with peers. The `chat-room-API` allows for chat rooms, users and messages to be filtered or searched by query params. The API supports token-based authenticated requests and, it's a must to ensure that all the permission and authorization functionalities are applied to the users based on their roles.
 <br><br>
 
 
@@ -8,19 +8,19 @@ The `chat-room-api` is an API devloped with `Django` and `Django Rest Framework`
 
 ### Clone The Repository
 
-```bash
+```console
 git clone https://github.com/Eadwulf/chat-room-api
 ```
 
 ### Change Directory
 
-```bash
+```console
 cd chat-room-api
 ```
 
 ### Install The Dependencies And Activate The Virtual Environment
 
-```bash
+```console
 pipenv install && pipenv shell
 ```
 
@@ -49,7 +49,7 @@ DATABASES = {
 
 <aside>
     💡 If you do not have an existing database and user to use with these settings, follow the
-    instructions bellow and create new ones.
+    instructions below and create new ones.
 </aside>
 <br>
 
@@ -123,23 +123,23 @@ python manage.py migrate
 
 # Tests
 
-I have created a total of 29 tests, that test the apps `api`, `chatrooms`, and `accounts`.
+I have created a total of 34 tests, that test the app `api`, `chatrooms`, and `accounts`.
 <br>
 
 ### Run the tests
-```bash
+```console
 python manage.py test
 ```
 
 It should return an output such as
 
-```bash
-Found 29 test(s).
+```console
+Found 34 test(s).
 Creating test database for alias 'default'...
 System check identified no issues (0 silenced).
-.............................
+..................................
 ----------------------------------------------------------------------
-Ran 29 tests in 10.742s
+Ran 34 tests in 13.430s
 
 OK
 Destroying test database for alias 'default'...
@@ -147,31 +147,33 @@ Destroying test database for alias 'default'...
 <br>
 
 ### Tests in api app
-A total of 26 tests were included. Each functionality of the endpoints in the API is tested.
+A total of 30 tests were included. Each functionality of the endpoints in the API is tested.
 The requests made in the tests to the API endpoints are token-based authenticated requests.
 <br>
 
 ### Tests in the chatrooms app
-The tests in the chatrooms app perform CRUD operations in the models Chatroom and Message.
+The tests in the chatrooms app perform CRUD operations on Chatroom and Message models.
 <br>
 
 ### Tests in the accounts app
-The test in the account app performs CRUD operations in the model CustomUser.
+The test in the account app performs CRUD operations in the CustomUser model.
 <br> <br>
+
 # API Endpoints
 
-The project consists of a total of eleven (11) endpoints, such endpoints provide functionalities for users, chatrooms, messages and more.
+The project consists of a total of ten (10) endpoints, such endpoints provide functionalities for users, chatrooms, messages and more.
 
 ### Endpoints list
 
 | URL | ALLOWED HTTP METHODS |
 | --- | --- |
 | api/users | GET, POST |
-| api/users/{userId} | PATCH, PUT, DELETE |
+| api/users/{userId} | GET, PATCH, PUT, DELETE |
+| api/users/{userId}/friends | GET, POST, DELETE |
 | api/messages | GET, POST |
-| api/messages/{messageId} | PATCH, PUT, DELETE |
+| api/messages/{messageId} | GET, PATCH, PUT, DELETE |
 | api/chatrooms | GET, POST |
-| api/chatrooms/{chatroomId} | PATCH, PUT, DELETE |
+| api/chatrooms/{chatroomId} | GET, PATCH, PUT, DELETE |
 | api/chatrooms/{chatroomId}/messages | GET, POST |
 | api/chatrooms/{chatroomId}/Admins | GET, POST, DELETE |
 | api/chatrooms/{chatroomId}/participants | GET, POST, DELETE |
@@ -191,6 +193,14 @@ The project consists of a total of eleven (11) endpoints, such endpoints provide
 | PATCH | Any field | Partially updates the user data | 200 |
 | PUT | All fields | Updates the user data | 200 |
 | DELETE |  | Deletes the user | 204 |
+
+### api/users/{userId}/friends
+
+| HTTP METHOD | REQUIRED DATA | ACTION | STATUS CODE |
+| --- | --- | --- | --- |
+| GET |  | Retrieves the user's friend list | 200 |
+| POST | | Adds a friend to the user's friend list | 200 |
+| DELETE | | Deletes a friend from the user's friend list | 200 |
 
 ### api/messages
 
@@ -232,7 +242,7 @@ The project consists of a total of eleven (11) endpoints, such endpoints provide
 | POST | body | Creates a message and adds it to the chatroom | 200 |
 
 <aside>
-    💡 The <em><strong>DELETE</strong></em> method can be call on the message object by using the <em><strong>api/messages/{messageId}</strong></em> endpoint.
+    💡 The <em><strong>DELETE</strong></em> method can be called on the message object by using the <em><strong>api/messages/{messageId}</strong></em> endpoint.
 </aside>
 
 ### api/chatrooms/{chatroomId}/admins
