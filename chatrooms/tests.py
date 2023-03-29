@@ -1,7 +1,7 @@
 from django.test import TestCase
 
 from chatrooms.models import Chatroom, Message
-from accounts.tests import CreateTestUserMixin
+from accounts.tests import CreateUserMixin
 
 
 class TestChatroomMixin:
@@ -22,10 +22,10 @@ class TestChatroomMixin:
         return chatroom_message
 
 
-class ChatroomTest(CreateTestUserMixin, TestChatroomMixin, TestCase):
+class ChatroomTest(CreateUserMixin, TestChatroomMixin, TestCase):
 
     def setUp(self) -> None:
-        self.user = self.create_test_user()
+        self.user = self.create_user()
         self.chatroom = self.create_chatroom()
         self.chatroom_message = self.create_chatroom_message()
         self.chatroom.participants.add(self.user)
