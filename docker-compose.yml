@@ -5,7 +5,7 @@ services:
     image:  postgres:15.2
     restart: unless-stopped
     volumes:
-      - ./data/db:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
@@ -25,3 +25,7 @@ services:
       - POSTGRES_PASSWORD=postgres
     depends_on:
       - db
+
+volumes:
+  postgres-data:
+    driver: local
