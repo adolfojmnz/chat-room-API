@@ -6,158 +6,42 @@ The `chat-room-api` is an API developed with `Django` and `Django Rest Framework
 
 # Installation
 
-### Clone The Repository
+<aside>💡 Both Docker and DockerCompose are required </aside>
+<br>
 
+### Clone The Repository
 ```console
 git clone https://github.com/Eadwulf/chat-room-api
 ```
 
 ### Change Directory
-
 ```console
 cd chat-room-api
 ```
 
-### Install The Dependencies And Activate The Virtual Environment
-
+### Checkout `docker` branch
 ```console
-pipenv install && pipenv shell
+git checkout docker
 ```
 
-<aside>
-    💡 Make sure to install <a href="https://pypi.org/project/pipenv/">pipenv</a> on your system
-</aside>
-<br><br>
-
-
-# Database Setup
-
-The project uses a PostgreSQL database. Configured as follows
-
-```python
-DATABASES = {
-    'default': {
-	'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env('DATABASE_NAME'),
-        'HOST': env('DATABASE_HOST'),
-        'PORT': env('DATABASE_PORT'),
-        'USER': env('DATABASE_USER'),
-        'PASSWORD': env('DATABASE_PASSWORD'),
-    },
-}
+### Build/Run the containers
+```console
+docker-compose up -d
 ```
-
-<aside>
-    💡 If you do not have an existing database and user to use with these settings, follow the
-    instructions below and create new ones.
-</aside>
-<br>
-
-### Enter The PostgreSQL Prompt
-
-```sql
-psql -U postgres -d postgres
-```
-
-### Create The Database
-
-```sql
-CREATE DATABASE <database_name>;
-```
-
-### Create The User
-
-```sql
-CREATE USER <username> WITH ENCRYPTED PASSWORD '<password>';
-```
-
-### Modifying Connection Parameters
-
-```sql
-ALTER ROLE <database_user> SET client_encoding TO 'utf8';
-ALTER ROLE <database_user> SET default_transaction_isolation TO 'read committed';
-ALTER ROLE <database_user> SET timezone TO 'UTC';
-```
-
-### Grant Permissions To The User
-
-```sql
- GRANT ALL PRIVILEGES ON DATABASE <database_name> TO <username>;
-```
-
-### Exit The Prompt
-
-```sql
-\q
-```
-<br>
-
-
-# Environment Variables
-
-### Create The Environment Variables File **(.env)**
-
-In the root directory *(chat-room-api/)*, create the **.env** file and add to it the following
-
-```python
-DEBUG=<boolean_value>
-SECRET_KEY=<your_django_api_key>
-DATABASE_NAME=<your_database_name>
-DATABASE_HOST=<your_database_host>
-DATABASE_PORT=<your_database_port>
-DATABASE_USER=<your_database_user>
-DATABASE_PASSWORD=<your_database_password>
-```
-<aside>
-    💡 Be aware that <em>django-environ</em> is required. Such dependency should be installed
-    by running <em>pipenv install</em>
-</aside>
-<br>
-
-### Apply the migrations
-
-```python
-python manage.py migrate
-```
-<br>
-
-# Tests
-
-I have created a total of 34 tests, that test the app `api`, `chatrooms`, and `accounts`.
-<br>
 
 ### Run the tests
 ```console
-python manage.py test
+docker exec -it chat-room-api python manage.py test
 ```
 
-It should return an output such as
+### PostgreSQL Prompt
+<aside>💡 If you need to access the PostgreSQL prompt </aside>
 
 ```console
-Found 34 test(s).
-Creating test database for alias 'default'...
-System check identified no issues (0 silenced).
-..................................
-----------------------------------------------------------------------
-Ran 34 tests in 13.430s
-
-OK
-Destroying test database for alias 'default'...
+docker exec -it chat-room-db psql -U postgres -d postgres
 ```
 <br>
 
-### Tests in api app
-A total of 30 tests were included. Each functionality of the endpoints in the API is tested.
-The requests made in the tests to the API endpoints are token-based authenticated requests.
-<br>
-
-### Tests in the chatrooms app
-The tests in the chatrooms app perform CRUD operations on Chatroom and Message models.
-<br>
-
-### Tests in the accounts app
-The test in the account app performs CRUD operations in the CustomUser model.
-<br> <br>
 
 # API Endpoints
 
