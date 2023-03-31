@@ -29,10 +29,9 @@ INSTALLED_APPS = [
     'django_filters',
 
     # my apps
-    'accounts',
-    'chatrooms',
+    'accounts.apps.AccountsConfig',
+    'chatrooms.apps.ChatroomsConfig',
     'api.apps.ApiConfig',
-    'frontend',
 ]
 
 MIDDLEWARE = [
