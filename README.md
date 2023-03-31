@@ -6,6 +6,9 @@ The `chat-room-api` is an API developed with `Django` and `Django Rest Framework
 
 # Installation
 
+## Docker Containers
+Follow the instructions on the branch [docker](https://github.com/Eadwulf/chat-room-API/tree/docker) to build the containers to run this project.
+
 ### Clone The Repository
 
 ```console
