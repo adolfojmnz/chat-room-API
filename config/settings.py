@@ -29,7 +29,7 @@ INSTALLED_APPS = [
     'django_filters',
 
     # my apps
-    'accounts.apps.AccounstConfig',
+    'accounts.apps.AccountsConfig',
     'chatrooms.apps.ChatroomsConfig',
     'api.apps.ApiConfig',
 ]
