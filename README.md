@@ -1,6 +1,6 @@
 # Description
 
-The `chat-room-api` is an API developed with `Django` and `Django Rest Framework` in addition to other libraries and tools. The idea of this project is to serve as a back-end for a Chat Room (front-end web application) with similarities to ***[Discord](https://discord.com/)*** or similar platforms, in which registered users can join existing chat rooms or create their own and chat with peers. The `chat-room-API` allows for chat rooms, users and messages to be filtered or searched by query params. The API supports token-based authenticated requests and, it's a must to ensure that all the permission and authorization functionalities are applied to the users based on their roles.
+The `chat-room-api` is an API developed with `Django` and `Django Rest Framework` in addition to other libraries and tools. The idea of this project is to serve as a back-end for a Chat Room (front-end web application) with similarities to ***[Discord](https://discord.com/)*** or similar platforms, in which registered users can join existing chat rooms or create their own and chat with peers. The `chat-room-API` allows for chat rooms, users, and messages to be filtered or searched by query parameters. The API supports token-based authenticated requests and, it's a must to ensure that all the permission and authorization functionalities are applied to the users based on their roles.
 <br><br>
 
 
